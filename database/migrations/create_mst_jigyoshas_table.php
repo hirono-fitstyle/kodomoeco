@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mst_jigyoshas', function (Blueprint $table) {
-            $table->integer('operatorNumber')->comment('事業者登録番号');
+            $table->string('operatorNumber', '7')->comment('事業者登録番号');
             $table->string('operatorPasscode', '6')->comment('連携用パスコード');
-            $table->integer('operatorId')->comment('補助事業者ID');
+            $table->string('operatorId', '10')->comment('補助事業者ID');
             $table->string('operatorCategory', '1')->comment('補助事業者区分');
             $table->string('corpNumber', '13')->comment('法人番号');
             $table->string('operatorName', '50')->comment('法人名・屋号');
