@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mst_jigyoshas', function (Blueprint $table) {
+        Schema::create('operators', function (Blueprint $table) {
             $table->string('operatorNumber', '7')->comment('事業者登録番号');
             $table->string('operatorPasscode', '6')->comment('連携用パスコード');
             $table->string('operatorId', '10')->comment('補助事業者ID');
@@ -79,6 +79,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mst_jigyoshas');
+        Schema::dropIfExists('operators');
     }
 };

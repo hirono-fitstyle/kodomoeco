@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mst_kouzas', function (Blueprint $table) {
+        Schema::create('bank_accounts', function (Blueprint $table) {
             $table->integer('number')->comment('システム管理番号');
             $table->string('operatorId', '9')->comment('事業者ID');
             $table->string('kinyuKikanName', '100')->comment('登録口座名称');
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mst_kouzas');
+        Schema::dropIfExists('bank_accounts');
     }
 };
