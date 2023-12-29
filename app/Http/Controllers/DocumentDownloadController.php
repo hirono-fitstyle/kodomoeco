@@ -25,7 +25,7 @@ class DocumentDownloadController extends BaseController
                 ->setOption('margin-left', '20')
                 ->setOption('margin-right', '20')
                 ;
-            return $pdf->inline('(様式1)事業者登録申請書・規約');  //ブラウザ上で開ける
+            return $pdf->inline('(様式1)事業者登録申請書・規約.pdf');  //ブラウザ上で開ける
 
         } catch(\Exception $e) {
             $hoge = $e->getMessage();
