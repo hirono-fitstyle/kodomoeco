@@ -36,6 +36,12 @@ Route::middleware('guest')->group(function () {
     // ポータル
     Route::get('login',[AccountController::class,'showLogin'])->name('show-login');
     Route::post('login',[AccountController::class,'login'])->name('login');
+
+    Route::get('reset-password-request',[AccountController::class,'showResetPasswordRequest'])->name('reset-password-request');
+    Route::post('reset-password-request',[AccountController::class,'resetPasswordRequestConfirm'])->name('reset-password-request-confirm');
+    Route::get('reset-password-request-complete',[AccountController::class,'resetPasswordRequestComplete'])->name('reset-password-request-complete');
+    Route::get('reset-password/{token}',[AccountController::class,'resetPassword'])->name('reset-password');
+    Route::get('reset-password-complete',[AccountController::class,'resetPasswordComplete'])->name('reset-password-complete');
 });
 
 Route::middleware('auth')->group(function () {

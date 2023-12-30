@@ -6,12 +6,18 @@ use App\Models\MstJigyoshas;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\ResetPasswordRequestRequest;
 use App\Providers\RouteServiceProvider;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Mail\ResetPasswordRequest as ResetPasswordRequestMail;
+use App\Mail\ResetPasswordComplete;
 
 class AccountController extends Controller
 {
@@ -102,11 +108,110 @@ class AccountController extends Controller
         return view('portal.top');
     }
 
-    public function logout()
+    public function showResetPasswordRequest()
     {
-        Auth::logout();
-        Log::info('logout done!');
+        return view('auth.passwords.reset-request');
+    }
 
-        return view('auth.login');
+    public function resetPasswordRequestConfirm(ResetPasswordRequestRequest $request)
+    {
+        $obj_mst_jigyosha = MstJigyoshas::where('operatorId', '=', $request->operator_id)
+            ->where('staffLastName', '=', $request->last_name)
+            ->where('staffFirstName', '=', $request->first_name)
+            ->where('staffMail', '=', $request->email);
+
+        if (!$obj_mst_jigyosha->exists()) {
+            return redirect()->back()->with('alert', __('Account not found.'));
+        }
+
+        $mst_jigyosha = $obj_mst_jigyosha->first();
+
+        $request->session()->put('operator_number', $mst_jigyosha->operatorNumber);
+        $request->session()->put('email', $request->email);
+
+        $split_email = explode($request->email, '@');
+        $domain_length = strlen($split_email[1]);
+        $mask_email = Str::mask($split_email[0], '*', 1) . '@' . Str::mask($split_email[1], '*', $domain_length - 1, $domain_length - 2);
+        Log::info('mask_email');
+        Log::info($mask_email);
+        return view('auth.passwords.reset-request-confirm')->with(['mask_email' => $mask_email]);
+    }
+
+    public function resetPasswordRequestComplete(Request $request)
+    {
+        $operator_number = $request->session()->pull('operator_number');
+        $email = $request->session()->pull('email');
+        $reset_token = str_random(32);
+
+        DB::beginTransaction();
+        try {
+            $user = Account::where('operator_number', $operator_number)->first();
+            $user->fill([
+                'password_reset_token' => $reset_token,
+            ]);
+            $user->save();
+
+            $reset_url = 'http://localhost:8080/reset-password/' . $reset_token;
+            Mail::to($email)->send(new ResetPasswordRequestMail($reset_url));
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+
+            return redirect()->back()->with('alert', __('An error has occurred.'));
+        }
+
+        return view('auth.passwords.reset-password-complete');
+    }
+
+    public function showResetPassword(Request $request)
+    {
+        $obj_account = Account::where('password_reset_token', $request->token);
+
+        if (!$obj_account->exists()) {
+            // 対象データなしエラー
+            return view('auth.login');
+        }
+
+        $request->session()->put('reset_token', $request->token);
+
+        return view('auth.passwords.reset');
+    }
+
+    public function resetPasswordComplete(ResetPasswordRequest $request)
+    {
+        $reset_token = $request->session()->pull('reset_token');
+        DB::beginTransaction();
+        try {
+            $account = Account::where('password_reset_token', $reset_token)->first();
+            $account->fill([
+                'password' => Hash::make($request->password),
+                'password_reset_token' => null,
+            ]);
+            $account->save();
+
+            $mst_jigyosha = MstJigyoshas::where('operatorNumber', '=', $account->operator_number)->first();
+
+            Mail::to($mst_jigyosha->staffMail)->send(new ResetPasswordComplete($mst_jigyosha->operatorId));
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+
+            return redirect()->back()->with('alert', __('An error has occurred.'));
+        }
+
+        return view('auth.passwords.reset-complete');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        redirect()->route('show-login');
     }
 }
