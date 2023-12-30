@@ -12,12 +12,12 @@
                         @csrf
 
                         <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+                            <label for="operator_id" class="col-md-4 col-form-label text-md-end">{{ __('ID') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input id="operator_id" type="text" class="form-control @error('operator_id') is-invalid @enderror" name="operator_id" value="{{ old('operator_id') }}" required autocomplete="ID" autofocus>
 
-                                @error('email')
+                                @error('operator_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>

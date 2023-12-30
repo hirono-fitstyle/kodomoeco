@@ -120,7 +120,8 @@ class RegisterAccountController extends Controller
 
         $obj_account = DB::table('accounts')
         ->where('verify_token', '=', $token)
-        ->where('verify_expired_at', '>=', Carbon::now());
+        ->where('verify_expired_at', '>=', Carbon::now())
+        ->whereNull('email_verified_at');
 
         if (!$obj_account->exists()) {
             // 404エラー
@@ -141,7 +142,7 @@ class RegisterAccountController extends Controller
             Account::where('verify_token', '=', $token)->update([
                 'email_verified_at' => Carbon::now(),
                 'is_reset_password' => true,
-                'password' => $initial_password,
+                'password' => Hash::make($initial_password),
             ]);
             // $account['initial_password'] = $initial_password; // 認証メールへ添付するため
 
