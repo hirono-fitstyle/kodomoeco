@@ -17,7 +17,7 @@ class ResetPasswordRequest extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(protected string $reset_url)
+    public function __construct(protected string $operator_id, protected string $reset_url)
     {
         //
     }
@@ -29,7 +29,7 @@ class ResetPasswordRequest extends Mailable
     {
         return new Envelope(
             from: new Address('noreply@jutaku-shoene2024.jp'),
-            subject: '【住宅省エネ2023キャンペーン】住宅省エネポータル　統括アカウント　パスワードの再設定のお知らせ',
+            subject: '【住宅省エネ2024キャンペーン】住宅省エネポータル　統括アカウント　パスワードの再設定のお知らせ',
         );
     }
 
@@ -41,6 +41,7 @@ class ResetPasswordRequest extends Mailable
         return new Content(
             view: 'emails.auth.reset-password-request',
             with: [
+                'operator_id' => $this->operator_id,
                 'verification_url' => $this->reset_url,
             ],
         );

@@ -28,8 +28,19 @@
 </header>
 <main>
     <section class="login">
-        <h2 class="u-margin-bottom-60 u-typography-6">パスワードリセット</h2>
-        <p class="u-typography-9 u-margin-bottom-20">パスワードの更新が完了しました。</p>
+        <h2 class="u-margin-bottom-60 u-typography-6">パスワードリセット確認画面</h2>
+        <form class="form" method="POST" action="{{ route('reset-password-request-complete') }}">
+            @csrf
+
+            <p class="u-typography-9 u-margin-bottom-20">以下の送信先に対して、パスワードをリセットするための情報を送信します。送信先を確認の上、送信ボタンを押してください。</p>
+            <p class="u-typography-9 u-margin-bottom-20">Eメール</p>
+            <p class="u-typography-9 u-margin-bottom-20">{{ $mask_email }}</p>
+            <div class="btnbox">
+                <button type="submit" class="btn2" style="width: 100%; cursor: pointer;">
+                    リセットを要求
+                </button>
+            </div>
+        </form>
     </section>
 </main>
 

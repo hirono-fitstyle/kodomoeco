@@ -29,7 +29,7 @@ class ResetPasswordComplete extends Mailable
     {
         return new Envelope(
             from: new Address('noreply@jutaku-shoene2024.jp'),
-            subject: 'Reset Password Complete',
+            subject: '【住宅省エネ2024キャンペーン】住宅省エネポータル　統括アカウント　パスワードの再設定完了のお知らせ',
         );
     }
 
@@ -39,7 +39,7 @@ class ResetPasswordComplete extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.auth.reset-password-request',
+            view: 'emails.auth.reset-password-complete',
             with: [
                 'operator_id' => $this->operator_id,
             ],

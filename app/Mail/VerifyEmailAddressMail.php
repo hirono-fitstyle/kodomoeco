@@ -29,7 +29,7 @@ class VerifyEmailAddressMail extends Mailable
     {
         return new Envelope(
             from: new Address('noreply@jutaku-shoene2024.jp'),
-            subject: '※まだ完了していません※【住宅省エネ2023キャンペーン】住宅省エネポータル　統括アカウントの発行に関するお知らせ',
+            subject: '※まだ完了していません※【住宅省エネ2024キャンペーン】住宅省エネポータル　統括アカウントの発行に関するお知らせ',
         );
     }
 

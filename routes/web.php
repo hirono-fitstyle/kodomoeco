@@ -39,14 +39,20 @@ Route::middleware('guest')->group(function () {
 
     Route::get('reset-password-request',[AccountController::class,'showResetPasswordRequest'])->name('reset-password-request');
     Route::post('reset-password-request',[AccountController::class,'resetPasswordRequestConfirm'])->name('reset-password-request-confirm');
-    Route::get('reset-password-request-complete',[AccountController::class,'resetPasswordRequestComplete'])->name('reset-password-request-complete');
-    Route::get('reset-password/{token}',[AccountController::class,'resetPassword'])->name('reset-password');
-    Route::get('reset-password-complete',[AccountController::class,'resetPasswordComplete'])->name('reset-password-complete');
+    Route::post('reset-password-request-complete',[AccountController::class,'resetPasswordRequestComplete'])->name('reset-password-request-complete');
+    Route::get('reset-password/{token}',[AccountController::class,'showResetPassword'])->name('reset-password');
+    Route::post('reset-password-complete',[AccountController::class,'resetPasswordComplete'])->name('reset-password-complete');
 });
 
 Route::middleware('auth')->group(function () {
     Route::get('portal',[AccountController::class,'showPortalTop'])->name('portal.top');
     Route::get('portal/reset-initial-password',[AccountController::class,'showPortalResetInitialPassword'])->name('portal.reset-initial-password');
     Route::post('portal/reset-initial-password',[AccountController::class,'showPortalResetInitialPasswordStore'])->name('portal.reset-initial-password-store');
-    Route::get('logout',[AccountController::class,'logout'])->name('logout');
+
+    // パスワード再設定
+    Route::get('portal/change-password',[AccountController::class,'showPortalChangePassword'])->name('portal.change-password');
+    Route::post('portal/change-password',[AccountController::class,'portalChangePasswordStore'])->name('portal.change-password-store');
+
+    // ログアウト
+    Route::post('logout',[AccountController::class,'logout'])->name('logout');
 });

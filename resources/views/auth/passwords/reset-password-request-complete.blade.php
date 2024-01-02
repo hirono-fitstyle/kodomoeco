@@ -28,8 +28,9 @@
 </header>
 <main>
     <section class="login">
-        <h2 class="u-margin-bottom-60 u-typography-6">パスワードリセット</h2>
-        <p class="u-typography-9 u-margin-bottom-20">パスワードの更新が完了しました。</p>
+        <h2 class="u-margin-bottom-60 u-typography-6">パスワードリセット（メールをご確認ください）</h2>
+        <p class="u-typography-9 u-margin-bottom-20">パスワードリセット用のURLを発行しました。</p>
+        <p class="u-typography-9 u-margin-bottom-20">メールをご確認いただき、記載あれているURLより画面をきどうしてパスワードのリセットを完了してください。</p>
     </section>
 </main>
 

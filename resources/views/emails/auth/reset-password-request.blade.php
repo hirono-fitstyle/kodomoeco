@@ -8,7 +8,7 @@
 
 　■ユーザID　　　　　　    ：　{{ $operator_id }}
 
-　■再設定ページのURL　：　{!! htmlspecialchars_decode($reset_url) !!}
+　■再設定ページのURL　：　{!! htmlspecialchars_decode($verification_url) !!}
 
 　************************************************************
 

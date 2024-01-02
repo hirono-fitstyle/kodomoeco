@@ -29,7 +29,7 @@ class AccountIssuanceCompleted extends Mailable
     {
         return new Envelope(
             from: new Address('noreply@jutaku-shoene2024.jp'),
-            subject: '※要保管※【住宅省エネ2023キャンペーン】住宅省エネポータル　統括アカウント発行のお知らせ',
+            subject: '※要保管※【住宅省エネ2024キャンペーン】住宅省エネポータル　統括アカウント発行のお知らせ',
         );
     }
 
