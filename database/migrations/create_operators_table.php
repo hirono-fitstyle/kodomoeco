@@ -12,10 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('operators', function (Blueprint $table) {
-            $table->string('operatorNumber', '7')->comment('事業者登録番号');
+            $table->integer('operatorNumber')->comment('事業者登録番号');
             $table->string('operatorPasscode', '6')->comment('連携用パスコード');
-            $table->string('operatorId', '10')->comment('補助事業者ID');
+            $table->integer('operatorId')->comment('補助事業者ID');
+            $table->string('operatorStatus', '1')->comment('事業者登録ステータス');
             $table->string('operatorCategory', '1')->comment('補助事業者区分');
+            $table->string('oath', '1')->comment('宣誓');
             $table->string('corpNumber', '13')->comment('法人番号');
             $table->string('operatorName', '50')->comment('法人名・屋号');
             $table->string('operatorTitle', '30')->comment('代表者 肩書');
@@ -62,7 +64,9 @@ return new class extends Migration
             $table->string('reformAssociation', '2')->comment('住宅リフォーム事業者団体');
             $table->string('reformAssociationUrl', '100')->comment('住宅リフォーム事業者団体URL');
             $table->boolean('recieveMailFlag')->comment('メール受信希望フラグ');
-            
+            $table->boolean('privacyPolicyConsent1')->comment('プライバシーポリシー同意1');
+            $table->boolean('privacyPolicyConsent2')->comment('プライバシーポリシー同意2');
+
             $table->timestamps();
             $table->softDeletes();
 
