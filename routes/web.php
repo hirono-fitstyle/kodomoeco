@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Auth\RegisterAccountController;
+use App\Http\Controllers\ManagerController;
+use App\Http\Controllers\OperatorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,4 +57,27 @@ Route::middleware('auth')->group(function () {
 
     // ログアウト
     Route::post('logout',[AccountController::class,'logout'])->name('logout');
+
+    Route::prefix('portal')->name('portal.')->group(function () {
+        // 本アカウントの利用者の情報
+        Route::prefix('/manager')->name('manager.')->group(function () {
+            Route::get('/detail', [ManagerController::class, 'detail'])->name('detail');
+            Route::get('/edit', [ManagerController::class, 'edit'])->name('edit');
+            Route::put('/update', [ManagerController::class, 'update'])->name('update');
+        });
+        // 事業者登録の情報
+        Route::prefix('/operator')->name('operator.')->group(function () {
+            Route::get('/detail', [OperatorController::class, 'detail'])->name('detail');
+            Route::get('/edit', [OperatorController::class, 'edit'])->name('edit');
+            Route::put('/update', [OperatorController::class, 'update'])->name('update');
+        });
+            // 添付書類登録画面
+            Route::get('/documentUpload', [OperatorController::class, 'docCreate'])->name('operator.docCreate');
+            // 添付書類登録処理
+            Route::post('/documentUpload', [OperatorController::class, 'docStore'])->name('operator.docStore');
+            // 登録申請画面
+            Route::get('/registration', [OperatorController::class, 'regRequestCreate'])->name('operator.regRequestCreate');
+            // 登録申請処理
+            Route::post('/registration', [OperatorController::class, 'regRequestStore'])->name('operator.regRequestStore');
+    });
 });
