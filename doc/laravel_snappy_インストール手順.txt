@@ -1,0 +1,33 @@
+# 1.Wkhtmltopdf 及び Laravel-Snappyのインストール
+# composer.jsonに記載済みなので、インストールをお願いします。
+
+# 2.サービスプロバイダーとエイリアスへの登録
+# providersに以下を追加願います。
+    Barryvdh\Snappy\ServiceProvider::class
+# aliasesに以下を追加願います。
+    'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+    'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
+
+# 3.Snappy config ファイルの作成
+# php artisan vendor:publish --provider="Barryvdh\Snappy\ServiceProvider"
+
+# 4.3を実行後に生成される /config/snappy.phpの内容を以下に書き換えてください。
+
+    'pdf' => [
+        'enabled' => true,
+        'binary'  => '/usr/local/bin/wkhtmltopdf', 
+        'timeout' => false,
+        'options' => ['enable-local-file-access' => true],
+        'env'     => [],
+    ],
+    
+    'image' => [
+        'enabled' => true,
+        'binary'  => '/usr/local/bin/wkhtmltoimage',
+        'timeout' => false,
+        'options' => ['enable-local-file-access' => true],
+        'env'     => [],
+    ],
+
+# 参考サイト
+https://reffect.co.jp/laravel/how_to_create_pdf_in_laravel_snappy
