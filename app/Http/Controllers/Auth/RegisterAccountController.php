@@ -109,9 +109,6 @@ class RegisterAccountController extends Controller
 
         $account = $obj_account->first();
 
-        Log::info('account');
-        Log::info($account->operator_number);
-
         DB::beginTransaction();
         try {
             // 事業者番号に使用する数値を取得
@@ -126,6 +123,9 @@ class RegisterAccountController extends Controller
             // 事業者番号
             $operator_number = 'S' . sprintf('%06d', $operator_number_numlic);
 
+            // 事業者ID
+            $operator_id = '6' . sprintf('%08d', $operator_number_numlic);
+
             // アカウントテーブルに認証情報を保存
             Account::where('verify_token', '=', $token)->update([
                 'operator_number' => $operator_number,
@@ -134,31 +134,23 @@ class RegisterAccountController extends Controller
                 'password' => Hash::make($initial_password),
             ]);
 
-            $obj_operator = DB::table('operators')->where('operatorNumber', '=', $account->operator_number);
-
             // 事業者情報テーブルに初期値を登録
             $mst_operator = new Operator();
             $mst_operator->fill([
                 'operatorNumber' => $operator_number,
                 'operatorPasscode' => $operator_passcode,
-                'operatorId' => '6' . sprintf('%08d', $operator_number),
+                'operatorId' => $operator_id,
+                'operatorStatus' => '1',
                 'staffLastName' => $account->last_name,
                 'staffFirstName' => $account->first_name,
                 'staffMail' => $account->email,
             ]);
             $mst_operator->save();
 
-            if (!$obj_operator->exists()) {
-                // 404エラー
-                Log::info('operators not exists');
-            }
-            $mst_operator = $obj_operator->first();
-            Log::info($mst_operator->staffLastName);
+            $staff_name = $account->last_name . ' ' . $account->first_name;
 
-            $staff_name = $mst_operator->staffLastName . ' ' . $mst_operator->staffFirstName;
-
-            Mail::to($mst_operator->staffMail)
-            ->send(new AccountIssuanceCompleted($staff_name, $mst_operator->operatorId, $initial_password));
+            Mail::to($account->email)
+            ->send(new AccountIssuanceCompleted($staff_name, $operator_number, $initial_password));
             
             DB::commit();
         } catch (Exception $e) {

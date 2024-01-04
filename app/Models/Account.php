@@ -26,6 +26,11 @@ class Account extends Authenticatable implements MustVerifyEmailContract
         'is_reset_password',
         'password',
         'password_reset_token',
+        'password_reset_expired_at',
+        'password_reset_verified_at',
+        'last_name',
+        'first_name',
+        'email',
     ];
 
     /**
