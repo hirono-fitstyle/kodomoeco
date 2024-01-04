@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('fileType', '1')->comment('添付タイプ');
             $table->string('fileName', '50')->comment('ファイル名');
             $table->datetime('uploadDate')->comment('添付日');
-            $table->string('remark', '100')->comment('備考');
+            $table->string('remark', '100')->nullable()->comment('備考');
             $table->string('setNo', '100')->comment('セット番号');
             
             $table->timestamps();

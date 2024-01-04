@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('kinyuKikanShitenCode', '3')->comment('支店コード');
             $table->string('kinyuKikanShitenMei', '100')->comment('支店名');
             $table->string('kinyuKikanYokinKubun', '1')->comment('預金種別');
-            $table->string('kinyuKikanYokinKubunSonota', '100')->comment('預金種別　その他備考');
+            $table->string('kinyuKikanYokinKubunSonota', '100')->nullable()->comment('預金種別　その他備考');
             $table->string('kinyuKikanKouzaBangou', '7')->comment('口座番号');
             $table->string('kinyuKikanKouzaMeigininKana', '50')->comment('口座名義人');
             
