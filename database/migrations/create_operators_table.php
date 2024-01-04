@@ -63,6 +63,9 @@ return new class extends Migration
             $table->boolean('reformFlag')->comment('住宅リフォーム事業者団体登録有無');
             $table->string('reformAssociation', '2')->comment('住宅リフォーム事業者団体');
             $table->string('reformAssociationUrl', '100')->comment('住宅リフォーム事業者団体URL');
+            $table->boolean('publicProjectAbolishFlag1')->comment('公開情報 参加補助金事業（こどもエコすまい）廃止フラグ');
+            $table->boolean('publicProjectAbolishFlag2')->comment('公開情報 参加補助金事業（高効率給湯器）廃止フラグ');
+            $table->boolean('publicProjectAbolishFlag3')->comment('公開情報 参加補助金事業（断熱窓）廃止フラグ');
             $table->boolean('recieveMailFlag')->comment('メール受信希望フラグ');
             $table->boolean('privacyPolicyConsent1')->comment('プライバシーポリシー同意1');
             $table->boolean('privacyPolicyConsent2')->comment('プライバシーポリシー同意2');
