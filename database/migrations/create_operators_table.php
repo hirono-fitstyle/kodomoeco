@@ -43,9 +43,10 @@ return new class extends Migration
             $table->string('staffTel', '11')->comment('担当者 電話番号（固定）');
             $table->string('staffMobile', '11')->comment('担当者 電話番号（携帯）');
             $table->string('staffMail', '100')->comment('担当者 メールアドレス');
-            $table->boolean('publicProject1')->comment('公開情報 参加補助金事業（こどもエコすまい）');
-            $table->boolean('publicProject2')->comment('公開情報 参加補助金事業（高効率給湯器）');
-            $table->boolean('publicProject3')->comment('公開情報 参加補助金事業（断熱窓）');
+            $table->boolean('publicProject1')->comment('公開情報 参加補助金事業（子育てエコホーム）');
+            $table->boolean('publicProject2')->comment('公開情報 参加補助金事業（給湯省エネ）');
+            $table->boolean('publicProject3')->comment('公開情報 参加補助金事業（先進的窓リノベ）');
+            $table->boolean('publicProject4')->comment('公開情報 参加補助金事業（賃貸集合給湯省エネ）');
             $table->boolean('publicBuisiness1')->comment('公開情報 参加事業（注文住宅の新築）');
             $table->boolean('publicBuisiness2')->comment('公開情報 参加事業（新築分譲住宅の販売）');
             $table->boolean('publicBuisiness3')->comment('公開情報 参加事業（リフォーム工事）');
@@ -63,9 +64,10 @@ return new class extends Migration
             $table->boolean('reformFlag')->comment('住宅リフォーム事業者団体登録有無');
             $table->string('reformAssociation', '2')->comment('住宅リフォーム事業者団体');
             $table->string('reformAssociationUrl', '100')->comment('住宅リフォーム事業者団体URL');
-            $table->boolean('publicProjectAbolishFlag1')->comment('公開情報 参加補助金事業（こどもエコすまい）廃止フラグ');
-            $table->boolean('publicProjectAbolishFlag2')->comment('公開情報 参加補助金事業（高効率給湯器）廃止フラグ');
-            $table->boolean('publicProjectAbolishFlag3')->comment('公開情報 参加補助金事業（断熱窓）廃止フラグ');
+            $table->boolean('publicProjectAbolishFlag1')->comment('公開情報 参加補助金事業（子育てエコホーム）廃止フラグ');
+            $table->boolean('publicProjectAbolishFlag2')->comment('公開情報 参加補助金事業（給湯省エネ）廃止フラグ');
+            $table->boolean('publicProjectAbolishFlag3')->comment('公開情報 参加補助金事業（先進的窓リノベ）廃止フラグ');
+            $table->boolean('publicProjectAbolishFlag4')->comment('公開情報 参加補助金事業（賃貸集合給湯省エネ）廃止フラグ');
             $table->boolean('recieveMailFlag')->comment('メール受信希望フラグ');
             $table->boolean('privacyPolicyConsent1')->comment('プライバシーポリシー同意1');
             $table->boolean('privacyPolicyConsent2')->comment('プライバシーポリシー同意2');
