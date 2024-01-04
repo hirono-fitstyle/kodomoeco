@@ -3,23 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use App\Models\MstJigyoshas;
-use App\Models\Account;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\AccountConfirmRequest;
+use App\Mail\AccountIssuanceCompleted;
+use App\Mail\VerifyEmailAddressMail;
+use App\Models\Account;
+use App\Models\Operator;
+
 use Exception;
 use Carbon\Carbon;
-
-use App\Http\Requests\AccountConfirmRequest;
-use App\Mail\VerifyEmailAddressMail;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\AccountIssuanceCompleted;
 
 class RegisterAccountController extends Controller
 {
@@ -61,37 +58,19 @@ class RegisterAccountController extends Controller
     {
         DB::beginTransaction();
         try {
-            // 初期パスワード生成
-            $operator_passcode = $this->createPassword('alpha_numlic', 6);
-
-            // 事業者番号に使用する数値を取得
-            $operator_number = $this->getNewOperatorNumber();
-
             // 認証トークン
             $verify_token = str_random(32);
 
             // アカウントテーブルに認証情報を保存
             $account = new Account();
             $account->fill([
-                'operator_number' => 'S' . sprintf('%06d', $operator_number),
                 'verify_token' => $verify_token,
                 'verify_expired_at' => Carbon::now()->addHour(24),
-
+                'last_name' => $request->last_name,
+                'first_name' => $request->first_name,
+                'email' => $request->email,
             ]);
             $account->save();
-            // $account['initial_password'] = $initial_password; // 認証メールへ添付するため
-
-            // 事業者情報テーブルに初期値を登録
-            $mst_jigyosha = new MstJigyoshas();
-            $mst_jigyosha->fill([
-                'operatorNumber' => 'S' . sprintf('%06d', $operator_number),
-                'operatorPasscode' => $operator_passcode,
-                'operatorId' => '6' . sprintf('%08d', $operator_number),
-                'staffLastName' => $request->last_name,
-                'staffFirstName' => $request->first_name,
-                'staffMail' => $request->email,
-            ]);
-            $mst_jigyosha->save();
 
             $verification_url = 'http://localhost:8080/entry/completion/' . $verify_token;
 
@@ -135,30 +114,51 @@ class RegisterAccountController extends Controller
 
         DB::beginTransaction();
         try {
+            // 事業者番号に使用する数値を取得
+            $operator_number_numlic = $this->getNewOperatorNumber();
+
             // 初期パスワード生成
             $initial_password = $this->createPassword();
 
+            // 初期パスコード生成
+            $operator_passcode = $this->createPassword('alpha_numlic', 6);
+
+            // 事業者番号
+            $operator_number = 'S' . sprintf('%06d', $operator_number_numlic);
+
             // アカウントテーブルに認証情報を保存
             Account::where('verify_token', '=', $token)->update([
+                'operator_number' => $operator_number,
                 'email_verified_at' => Carbon::now(),
                 'is_reset_password' => true,
                 'password' => Hash::make($initial_password),
             ]);
-            // $account['initial_password'] = $initial_password; // 認証メールへ添付するため
 
-            $obj_mst_jigyosha = DB::table('mst_jigyoshas')->where('operatorNumber', '=', $account->operator_number);
+            $obj_operator = DB::table('operators')->where('operatorNumber', '=', $account->operator_number);
 
-            if (!$obj_mst_jigyosha->exists()) {
+            // 事業者情報テーブルに初期値を登録
+            $mst_operator = new Operator();
+            $mst_operator->fill([
+                'operatorNumber' => $operator_number,
+                'operatorPasscode' => $operator_passcode,
+                'operatorId' => '6' . sprintf('%08d', $operator_number),
+                'staffLastName' => $account->last_name,
+                'staffFirstName' => $account->first_name,
+                'staffMail' => $account->email,
+            ]);
+            $mst_operator->save();
+
+            if (!$obj_operator->exists()) {
                 // 404エラー
-                Log::info('mst_jigyoshas not exists');
+                Log::info('operators not exists');
             }
-            $mst_jigyosha = $obj_mst_jigyosha->first();
-            Log::info($mst_jigyosha->staffLastName);
+            $mst_operator = $obj_operator->first();
+            Log::info($mst_operator->staffLastName);
 
-            $staff_name = $mst_jigyosha->staffLastName . ' ' . $mst_jigyosha->staffFirstName;
+            $staff_name = $mst_operator->staffLastName . ' ' . $mst_operator->staffFirstName;
 
-            Mail::to($mst_jigyosha->staffMail)
-            ->send(new AccountIssuanceCompleted($staff_name, $mst_jigyosha->operatorId, $initial_password));
+            Mail::to($mst_operator->staffMail)
+            ->send(new AccountIssuanceCompleted($staff_name, $mst_operator->operatorId, $initial_password));
             
             DB::commit();
         } catch (Exception $e) {
@@ -204,7 +204,7 @@ class RegisterAccountController extends Controller
     // 事業所番号の先頭文字を除いた数値のみを取得
     private function getNewOperatorNumber()
     {
-        $max_operator_number = MstJigyoshas::max('operatorNumber');
+        $max_operator_number = Operator::max('operatorNumber');
         if (empty($max_operator_number)) {
             return 1;
         } else {

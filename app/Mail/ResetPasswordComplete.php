@@ -39,7 +39,7 @@ class ResetPasswordComplete extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.auth.reset-password-complete',
+            text: 'emails.auth.reset-password-complete',
             with: [
                 'operator_id' => $this->operator_id,
             ],

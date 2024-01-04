@@ -39,7 +39,7 @@ class VerifyEmailAddressMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.auth.verify-email-address',
+            text: 'emails.auth.verify-email-address',
             with: [
                 'verification_url' => $this->verification_url,
             ],

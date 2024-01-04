@@ -39,7 +39,7 @@ class AccountIssuanceCompleted extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.auth.account-issuance-completed',
+            text: 'emails.auth.account-issuance-completed',
             with: [
                 'user_name' => $this->user_name,
                 'operator_id' => $this->operator_id,

@@ -39,7 +39,7 @@ class ResetPasswordRequest extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.auth.reset-password-request',
+            text: 'emails.auth.reset-password-request',
             with: [
                 'operator_id' => $this->operator_id,
                 'verification_url' => $this->reset_url,

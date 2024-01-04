@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ChangePasswordRequest;
-use App\Models\MstJigyoshas;
+use App\Models\Operator;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
@@ -33,17 +33,17 @@ class AccountController extends Controller
         $operator_id = $request->operator_id;
         $password = $request->password;
 
-        $obj_mst_jigyosha = MstJigyoshas::where('operatorId', '=', $operator_id);
+        $obj_operator = Operator::where('operatorId', '=', $operator_id);
 
-        if (!$obj_mst_jigyosha->exists()) {
+        if (!$obj_operator->exists()) {
             // アカウント存在なしエラー
             Log::info('アカウント存在なしエラー');
             return redirect()->back()->with('alert', __('An error has occurred.'));
         }
 
-        $mst_jigyosha = $obj_mst_jigyosha->first();
+        $operator = $obj_operator->first();
 
-        $obj_account = Account::where('operator_number', '=', $mst_jigyosha->operatorNumber);
+        $obj_account = Account::where('operator_number', '=', $operator->operatorNumber);
         $account = $obj_account->first();
 
         if (!password_verify($password, $account->password)) {
@@ -55,11 +55,11 @@ class AccountController extends Controller
         $request->session()->regenerate();
 
         // セッションに保存
-        $request->session()->put('operator_number', $mst_jigyosha->operatorNumber);
+        $request->session()->put('operator_number', $operator->operatorNumber);
         $request->session()->put('operator_id', $operator_id);
         $request->session()->put('password', $password);
 
-        $request->merge(['operator_number' => $mst_jigyosha->operatorNumber]);
+        $request->merge(['operator_number' => $operator->operatorNumber]);
         $credentials = $request->validate([
             'operator_number' => ['required'],
             'password' => ['required'],
@@ -107,10 +107,10 @@ class AccountController extends Controller
     public function showPortalTop(Request $request)
     {
         Log::info($request->session()->all());
-        $jigyosha = MstJigyoshas::where('operatorNumber', '=', $request->session()->get('operator_number'))->first();
-        $request->session()->put('staff_name', $jigyosha->staffLastName . ' ' . $jigyosha->staffFirstName);
+        $operator = Operator::where('operatorNumber', '=', $request->session()->get('operator_number'))->first();
+        $request->session()->put('staff_name', $operator->staffLastName . ' ' . $operator->staffFirstName);
 
-        return view('portal.top', compact('jigyosha'));
+        return view('portal.top', compact('operator'));
     }
 
     public function showResetPasswordRequest()
@@ -120,19 +120,19 @@ class AccountController extends Controller
 
     public function resetPasswordRequestConfirm(ResetPasswordRequestRequest $request)
     {
-        $obj_mst_jigyosha = MstJigyoshas::where('operatorId', '=', $request->operator_id)
+        $obj_operator = Operator::where('operatorId', '=', $request->operator_id)
             ->where('staffLastName', '=', $request->last_name)
             ->where('staffFirstName', '=', $request->first_name)
             ->where('staffMail', '=', $request->email);
 
-        if (!$obj_mst_jigyosha->exists()) {
+        if (!$obj_operator->exists()) {
             return redirect()->back()->with('alert', __('Account not found.'));
         }
 
-        $mst_jigyosha = $obj_mst_jigyosha->first();
+        $operator = $obj_operator->first();
 
-        $request->session()->put('operator_number', $mst_jigyosha->operatorNumber);
-        $request->session()->put('operator_id', $mst_jigyosha->operatorId);
+        $request->session()->put('operator_number', $operator->operatorNumber);
+        $request->session()->put('operator_id', $operator->operatorId);
         $request->session()->put('email', $request->email);
 
         $split_email = explode("@", $request->email);
@@ -208,9 +208,9 @@ class AccountController extends Controller
             ]);
             $account->save();
 
-            $mst_jigyosha = MstJigyoshas::where('operatorNumber', '=', $account->operator_number)->first();
+            $mst_operator = Operator::where('operatorNumber', '=', $account->operator_number)->first();
 
-            Mail::to($mst_jigyosha->staffMail)->send(new ResetPasswordComplete($mst_jigyosha->operatorId));
+            Mail::to($mst_operator->staffMail)->send(new ResetPasswordComplete($mst_operator->operatorId));
 
             DB::commit();
         } catch (Exception $e) {

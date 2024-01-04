@@ -155,7 +155,7 @@
                 <dt><span>登録事業者番号</span></dt>
                 <dd>
                     <div class="not-padding">
-                        <p class="u-color-text-red">{{ $jigyosha->operatorNumber }}</p>
+                        <p class="u-color-text-red">{{ $operator->operatorNumber }}</p>
                         <p class="indent"><span>※</span>公表を希望する場合、本キャンペーンのホームページで公表されます。</p>
                     </div>
                 </dd>
@@ -166,7 +166,7 @@
                 </dt>
                 <dd>
                     <div class="not-padding">
-                        <p class="u-color-text-red">{{ $jigyosha->operatorPasscode }}</p>
+                        <p class="u-color-text-red">{{ $operator->operatorPasscode }}</p>
                         <p class="indent"><span>※</span>交付申請用の担当者アカウントと連携する際に必要です。 外部に漏れないように厳重に管理してください。</p>
                     </div>
                 </dd>
