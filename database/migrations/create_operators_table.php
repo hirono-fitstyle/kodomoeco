@@ -69,7 +69,6 @@ return new class extends Migration
             $table->boolean('recieveMailFlag')->nullable()->comment('メール受信希望フラグ');
             $table->boolean('privacyPolicyConsent1')->nullable()->comment('プライバシーポリシー同意1');
             $table->boolean('privacyPolicyConsent2')->nullable()->comment('プライバシーポリシー同意2');
-
             $table->timestamps();
             $table->softDeletes();
 
