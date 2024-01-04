@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('operators', function (Blueprint $table) {
-            $table->integer('operatorNumber')->comment('事業者登録番号');
+            $table->string('operatorNumber', '7')->comment('事業者登録番号');
             $table->string('operatorPasscode', '6')->comment('連携用パスコード');
             $table->integer('operatorId')->comment('補助事業者ID');
             $table->string('operatorStatus', '1')->comment('事業者登録ステータス');
