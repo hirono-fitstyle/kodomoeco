@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('verify_token', '32');
             $table->timestamp('verify_expired_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->boolean('is_reset_password');
-            $table->string('password_reset_token', '32');
+            $table->string('password')->nullable();
+            $table->boolean('is_reset_password')->nullable();
+            $table->string('password_reset_token', '32')->nullable();
             $table->timestamp('password_reset_expired_at')->nullable();
             $table->timestamp('password_reset_verified_at')->nullable();
             $table->string('last_name', '20');
