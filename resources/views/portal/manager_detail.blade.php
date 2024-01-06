@@ -47,9 +47,21 @@
 <main>
     <h2 class="u-typography-6 u-margin-bottom-30">② 本アカウントの利用者の情報 | 詳細画面</h2>
     <div class="u-margin-bottom-30">
-        <p class="btn white">編集</p>
-        <p class="btn orange">①事業者登録へ</p>
-        <p class="btn none">TOPに戻る</p>
+        <p class="btn white">
+            <a href="{{ route('portal.manager.edit') }}">
+                編集
+            </a>
+        </p>
+        <p class="btn orange">
+            <a href="{{ route('portal.operator.detail') }}">
+                ①事業者登録へ
+            </a>
+        </p>
+        <p class="btn none">
+            <a href="{{ route('portal.top') }}">
+                TOPに戻る
+            </a>
+        </p>
     </div>
     <p class="u-color-text-red u-margin-bottom-30">異動・退職等により利用者が変更する場合、必ず次の担当者に引き継ぎを行ってください。 また、新しい担当者の方は必ずメールアドレスを含む登録情報を更新し、パスワードを変更してください。</p>
     <div class="bg2 u-margin-bottom-20">
@@ -61,7 +73,7 @@
                 </dt>
                 <dd>
                     <div>
-                        <p>株式会社ＲＨＥＭＳＤｅｓｉｇｎＬａｂ</p>
+                        <p>{{ $operator['operator_name'] }}</p>
                     </div>
                 </dd>
             </dl>
@@ -71,6 +83,7 @@
                 </dt>
                 <dd>
                     <div>
+                        <p>{{ $operator['staff_department'] }}</p>
 
                     </div>
                 </dd>
@@ -81,6 +94,7 @@
                 </dt>
                 <dd>
                     <div>
+                        <p>{{ $operator['staff_posision'] }}</p>
 
                     </div>
                 </dd>
@@ -91,7 +105,7 @@
                 </dt>
                 <dd>
                     <div>
-
+                        <p>{{ $operator['staff_last_name'] }}{{ $operator['staff_first_name'] }}</p>
                     </div>
                 </dd>
             </dl>
@@ -101,12 +115,12 @@
                 </dt>
                 <dd>
                     <div>
-                      <p>1070062<br>
-                          東京都<br>
-                          港区<br>
-                          南青山２−２−１５<br>
-                          ウィン青山<br>
-                          ９４２</p>
+                      <p>{{ $operator['staff_zipcode'] }}<br>
+                        {{ $operator['staff_prefecture'] }}<br>
+                        {{ $operator['staff_city'] }}<br>
+                        {{ $operator['staff_address'] }}<br>
+                        {{ $operator['staff_building'] }}<br>
+                        {{ $operator['staff_room_number'] }}</p>
                     </div>
                 </dd>
             </dl>
@@ -117,8 +131,8 @@
                 <dd>
                     <div>
                         <p>
-                            固定 0368683403<br>
-                            携帯
+                            固定 {{ $operator['staff_tel'] }}<br>
+                            携帯 {{ $operator['staff_mobile'] }}
                         </p>
                     </div>
                 </dd>
@@ -129,10 +143,16 @@
                 </dt>
                 <dd>
                     <div>
-                        <p class="u-margin-bottom-20">nakamura@rhems-design-lab.co.jp　<span class="btn orange">登録メールアドレスの変更はこちら</span></p>
+                        <p class="u-margin-bottom-20">{{ $operator['staff_mail'] }}　
+                        <span class="btn orange">
+                                <a href="{{ route('portal.manager.change-mail-address-request') }}">
+                                    登録メールアドレスの変更はこちら
+                                </a>
+                            </p>
+                    </span></p>
                         <ul class="businesslist">
-                            <li><input id="business1" name="" type="checkbox"><label for="business1">受信する</label></li>
-                            <li><input id="business2" name="" type="checkbox"><label for="business2">受信しない</label></li>
+                            <li><input id="business1" name="" type="radio" {{ $operator['recieve_mail_flag'] == '1' ? 'checked': '' }}><label for="business1">受信する</label></li>
+                            <li><input id="business2" name="" type="radio" {{ $operator['recieve_mail_flag'] == '0' ? 'checked': '' }}><label for="business2">受信しない</label></li>
                             <li class="u-color-text-red">※受診しない設定しても、事務局が重要と判断するメールは添付されます。</li>
                         </ul>
                     </div>
@@ -141,9 +161,21 @@
         </div>
     </div>
     <div class="u-margin-bottom-30">
-        <p class="btn white">編集</p>
-        <p class="btn orange">①事業者登録へ</p>
-        <p class="btn none">TOPに戻る</p>
+        <p class="btn white">
+            <a href="{{ route('portal.manager.edit') }}">
+                編集
+            </a>
+        </p>
+        <p class="btn orange">
+            <a href="{{ route('portal.operator.detail') }}">
+                ①事業者登録へ
+            </a>
+        </p>
+        <p class="btn none">
+            <a href="{{ route('portal.top') }}">
+                TOPに戻る
+            </a>
+        </p>
     </div>
 </main>
 </body>
