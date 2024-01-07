@@ -1,0 +1,15 @@
+
+
+.error-wrap {
+    padding: 10px;
+    color: #ff0000;
+}
+
+.error-wrap > p {
+    color: #ff0000;
+}
+
+.error-wrap > ul {
+    list-style: disc;
+    padding: 20px;
+}
