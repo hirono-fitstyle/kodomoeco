@@ -56,6 +56,11 @@ class RegisterAccountController extends Controller
 
     public function register(Request $request)
     {
+        // 戻るボタン処理
+        if ($request->has('back')) {
+            return redirect('entry')->withInput();
+        }
+
         DB::beginTransaction();
         try {
             // 認証トークン
@@ -137,20 +142,20 @@ class RegisterAccountController extends Controller
             // 事業者情報テーブルに初期値を登録
             $mst_operator = new Operator();
             $mst_operator->fill([
-                'operatorNumber' => $operator_number,
-                'operatorPasscode' => $operator_passcode,
-                'operatorId' => $operator_id,
-                'operatorStatus' => '1',
-                'staffLastName' => $account->last_name,
-                'staffFirstName' => $account->first_name,
-                'staffMail' => $account->email,
+                'operator_number' => $operator_number,
+                'operator_passcode' => $operator_passcode,
+                'operator_id' => $operator_id,
+                'operator_status' => '1',
+                'staff_last_name' => $account->last_name,
+                'staff_first_name' => $account->first_name,
+                'staff_mail' => $account->email,
             ]);
             $mst_operator->save();
 
             $staff_name = $account->last_name . ' ' . $account->first_name;
 
             Mail::to($account->email)
-            ->send(new AccountIssuanceCompleted($staff_name, $operator_number, $initial_password));
+            ->send(new AccountIssuanceCompleted($staff_name, $operator_id, $initial_password));
             
             DB::commit();
         } catch (Exception $e) {
@@ -196,7 +201,7 @@ class RegisterAccountController extends Controller
     // 事業所番号の先頭文字を除いた数値のみを取得
     private function getNewOperatorNumber()
     {
-        $max_operator_number = Operator::max('operatorNumber');
+        $max_operator_number = Operator::max('operator_number');
         if (empty($max_operator_number)) {
             return 1;
         } else {
