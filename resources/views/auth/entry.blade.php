@@ -32,6 +32,7 @@
 
         gtag('config', 'G-DYB5FTRP5M');
     </script>
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/common.js'])
 </head>
 
 <body>
@@ -146,6 +147,7 @@
                 <section class="p-index-block">
                     <h3 class="p-index-block__ttl">情報の入力</h3>
                     <p class="p-index-block__text">以下のすべての項目を入力してください。</p>
+                    @include('layouts.result')
                     <div class="p-index-from">
                         <div class="p-index-from-item">
                             <div class="p-index-from-item__head w250">
@@ -155,21 +157,11 @@
                                 <ul class="p-index-from-item__dataitem">
                                     <li class="">
                                         <span class="padding">姓</span>
-                                        <input id="last_name" class="p-index-from-item__datatext w200 @error('last_name') is-invalid @enderror" type="text" name="last_name" value="{{ old('last_name') }}" required autofocus>
-                                        @error('last_name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                                        <input id="last_name" class="p-index-from-item__datatext w200" type="text" name="last_name" value="{{ old('last_name') }}" required autofocus>
                                     </li>
                                     <li class="">
                                         <span class="padding">名</span>
-                                        <input id="first_name" class="p-index-from-item__datatext w200 @error('first_name') is-invalid @enderror" type="text" name="first_name" value="{{ old('first_name') }}" required autofocus>
-                                        @error('first_name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                                        <input id="first_name" class="p-index-from-item__datatext w200" type="text" name="first_name" value="{{ old('first_name') }}" required autofocus>
                                     </li>
                                 </ul>
                             </div>
@@ -179,12 +171,7 @@
                                 <p>メールアドレス<span class="required">必須</span></p>
                             </div>
                             <div class="p-index-from-item__data">
-                                <input id="email" class="p-index-from-item__datatext @error('email') is-invalid @enderror" type="text" name="email" value="{{ old('email') }}" required>
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <input id="email" class="p-index-from-item__datatext" type="text" name="email" value="{{ old('email') }}" required>
                                 <p>事務局からのメールが、迷惑メールとして取り扱われる事象が報告されています。除外リストに以下のドメインを追加頂けますよう、お願い致します。</p>
                                 <p>・●●@mail.jutaku-shoene2023.mlit.go.jp<br>
                                     ・●●@jutaku-shoene2023.jp<br>
@@ -277,8 +264,8 @@
                         <li><input id="" name="" type="checkbox"><label for="">登録する事業者（個人事業主含む）を代表します。（社外の方、営業担当者向けのアカウントではありません）</label></li>
                     </ul>
                     <div class="p-index-account-btnbox">
-                        <p class="p-index-account-btnbox__btn btn3">
-                            <button type="submit">
+                        <p class="p-index-account-btnbox__btn">
+                            <button type="submit" style="color:#fff;background:#5073b8;width:100%;">
                                 確認画面へ
                             </button>
                         </p>
