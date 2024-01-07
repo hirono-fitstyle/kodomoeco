@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('operator_number', 7);
+            $table->string('operator_number', 7)->nullable();
             $table->string('verify_token', '32');
             $table->timestamp('verify_expired_at')->nullable();
             $table->timestamp('email_verified_at')->nullable();
