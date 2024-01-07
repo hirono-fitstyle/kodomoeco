@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\OperatorStatus;
+use App\Models\Operator;
 use Illuminate\Http\Request;
 
 class OperatorController extends Controller
@@ -9,25 +11,39 @@ class OperatorController extends Controller
     /**
      * ① 事業者登録の情報｜詳細画面
      */
-    public function detail()
+    public function detail(Request $request)
     {
-        return view('portal.operator_detail');
+        $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'))->first();
+        $operator->operator_status = OperatorStatus::getDescription($operator->operator_status);
+
+        return view('portal.operator_detail', compact('operator'));
     }
 
     /**
      * ① 事業者登録の情報｜編集画面
      */
-    public function edit(string $id)
+    public function edit(Request $request)
     {
-        //
+        $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'))->first();
+        $operator->operator_status = OperatorStatus::getDescription($operator->operator_status);
+
+        return view('portal.operator_edit', compact('operator'));
     }
 
     /**
      * ① 事業者登録の情報｜編集処理
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        dd('実装途中', $request->input());
+
+        if ($request->has('tmp-save')){
+
+        // ここに仮保存押下時の処理
+
+        } elseif($request->has('save')) {
+        // ここに保存押下時の処理
+        }
     }
 
     /**
