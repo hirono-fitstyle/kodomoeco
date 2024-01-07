@@ -72,4 +72,25 @@ class Operator extends Model
         'privacyPolicyConsent2',
     ];
 
+    /**
+     * 所在地の取得
+     * 事業者種別によって丁町番地等以下が異なる
+     *
+     * @var string
+     * @return string
+     */
+    public function getAddress($category) : string {
+
+        $address = $this->operatorPrefecture . $this->operatorCity;
+        // 1：法人
+        if ($category == 1) {
+            $address .= $this->operatorAddress;
+        }
+        // 2：個人事業主
+        if ($category == 2) {
+            $address .= $this->operatorAddressSolo . $this->operatorBuildingSolo . $this->operatorRoomNumberSolo;
+        }
+
+        return $address;
+    }
 }
