@@ -13,8 +13,8 @@ class OperatorController extends Controller
      */
     public function detail(Request $request)
     {
-        $operator = Operator::where('operatorNumber', '=', $request->session()->get('operator_number'))->first();
-        $operator->operatorStatus = OperatorStatus::getDescription($operator->operatorStatus);
+        $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'))->first();
+        $operator->operator_status = OperatorStatus::getDescription($operator->operator_status);
 
         return view('portal.operator_detail', compact('operator'));
     }
@@ -24,8 +24,8 @@ class OperatorController extends Controller
      */
     public function edit(Request $request)
     {
-        $operator = Operator::where('operatorNumber', '=', $request->session()->get('operator_number'))->first();
-        $operator->operatorStatus = OperatorStatus::getDescription($operator->operatorStatus);
+        $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'))->first();
+        $operator->operator_status = OperatorStatus::getDescription($operator->operator_status);
 
         return view('portal.operator_edit', compact('operator'));
     }
@@ -35,7 +35,7 @@ class OperatorController extends Controller
      */
     public function update(Request $request)
     {
-        dd($request->input());
+        dd('実装途中', $request->input());
 
         if ($request->has('tmp-save')){
 

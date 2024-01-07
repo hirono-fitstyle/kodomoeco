@@ -81,14 +81,14 @@ class Operator extends Model
      */
     public function getAddress($category) : string {
 
-        $address = $this->operatorPrefecture . $this->operatorCity;
+        $address = $this->operator_prefecture . $this->operator_city;
         // 1：法人
         if ($category == 1) {
-            $address .= $this->operatorAddress;
+            $address .= $this->operator_address;
         }
         // 2：個人事業主
         if ($category == 2) {
-            $address .= $this->operatorAddressSolo . $this->operatorBuildingSolo . $this->operatorRoomNumberSolo;
+            $address .= $this->operator_address_solo . $this->operator_building_solo . $this->operator_room_number_solo;
         }
 
         return $address;

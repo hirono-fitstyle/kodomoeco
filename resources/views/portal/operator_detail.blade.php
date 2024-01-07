@@ -78,7 +78,7 @@
                 <dt><span>事業者登録ステータス</span></dt>
                 <dd>
                     <div>
-                        {{ $operator->operatorStatus }}
+                        {{ $operator->operator_status }}
                     </div>
                 </dd>
             </dl>
@@ -86,7 +86,7 @@
                 <dt><span>登録事業者番号</span></dt>
                 <dd>
                     <div>
-                        {{ $operator->operatorNumber }}
+                        {{ $operator->operator_number }}
                     </div>
                 </dd>
             </dl>
@@ -99,14 +99,14 @@
                     <div>
                         <ul class="businesslist1">
                             <li>
-                                <input id="business1" name="operatorCategory" type="radio"
-                                    {{ $operator->operatorCategory == 1 ? "checked" : "" }} disabled>
+                                <input id="business1" name="operator_category" type="radio"
+                                    {{ $operator->operator_category == 1 ? "checked" : "" }} disabled>
                                 <label for="business1">法人</label>
                                 <span class="u-color-text-red">※登録申請書に押印する印鑑が登録された「法人の印鑑証明」と「法人登記」の添付が必要です。</span>
                             </li>
                             <li>
-                                <input id="business2" name="operatorCategory" type="radio"
-                                    {{ $operator->operatorCategory == 2 ? "checked" : "" }} disabled>
+                                <input id="business2" name="operator_category" type="radio"
+                                    {{ $operator->operator_category == 2 ? "checked" : "" }} disabled>
                                 <label for="business2">個人事業主</label>
                                 <span class="u-color-text-red">※登録申請書に押印する印鑑が登録された「個人の印鑑証明」の添付が必要です。</span>
                             </li>
@@ -142,7 +142,7 @@
                 <dd>
                     <div>
                         <p class="u-margin-bottom-10">
-                            {{ $operator->corpNumber }}
+                            {{ $operator->corp_number }}
                         </p>
                         <a href="https://www.houjin-bangou.nta.go.jp/" target="_blank" rel="noopener noreferrer"><span class="btn white">国税庁HP</span></a>
                         <span>※国税庁「法人番号公表サイト」で調べられます。</span>
@@ -153,7 +153,7 @@
                 <dt><span>法人名（商号または名称）</span></dt>
                 <dd>
                     <div>
-                        {{ $operator->operatorName }}
+                        {{ $operator->operator_name }}
                     </div>
                 </dd>
             </dl>
@@ -161,8 +161,8 @@
                 <dt><span>所在地<br>（本店または主たる事業所）</span></dt>
                 <dd>
                     <div>
-                        {{ preg_replace("/(\d{3})(\d{4})/", "$1 - $2", $operator->operatorZipCode) }}<br>
-                        {{ $operator->getAddress($operator->operatorCategory) }}
+                        {{ preg_replace("/(\d{3})(\d{4})/", "$1 - $2", $operator->operator_zipCode) }}<br>
+                        {{ $operator->getAddress($operator->operator_category) }}
                     </div>
                 </dd>
             </dl>
@@ -170,7 +170,7 @@
                 <dt><span>代表者肩書</span></dt>
                 <dd>
                     <div>
-                        {{ $operator->operatorTitle }}
+                        {{ $operator->operator_title }}
                         ※添付する法人登記と一致すること。
                     </div>
                 </dd>
@@ -179,7 +179,7 @@
                 <dt><span>代表者氏名</span></dt>
                 <dd>
                     <div>
-                        {{ $operator->representativeLastName }} {{ $operator->representativeFirstName }}
+                        {{ $operator->representative_last_name }} {{ $operator->representative_first_name }}
                         ※添付する法人登記と一致すること。
                     </div>
                 </dd>
@@ -199,32 +199,32 @@
                             <li>
                                 <div>
                                     <p class="input1 u-margin-bottom-10">
-                                        <input name="publicProject1" type="checkbox"
-                                            {{ $operator->publicProject1 == 1 ? "checked" : "" }} disabled>
+                                        <input name="public_project1" type="checkbox"
+                                            {{ $operator->public_project1 == 1 ? "checked" : "" }} disabled>
                                         <label for="">子育てエコホーム支援事業</label>
                                     </p>
                                     <ul class="businesslist2">
                                         <li>
-                                            <input name="publicBuisiness1" type="checkbox"
-                                                {{ $operator->publicBuisiness1 == 1 ? "checked" : "" }} disabled>
+                                            <input name="public_buisiness1" type="checkbox"
+                                                {{ $operator->public_buisiness1 == 1 ? "checked" : "" }} disabled>
                                             <label for="">注文住宅の新築（建築事業者、工事請負業者）</label>
                                         </li>
                                         <li>
-                                            <input name="publicBuisiness2" type="checkbox"
-                                                {{ $operator->publicBuisiness2 == 1 ? "checked" : "" }} disabled>
+                                            <input name="public_buisiness2" type="checkbox"
+                                                {{ $operator->public_buisiness2 == 1 ? "checked" : "" }} disabled>
                                             <label for="">新築分譲住宅の購入（販売事業者、販売代理業者） ※宅地建物取引業者に限ります。</label>
                                         </li>
                                         <li>
-                                            <input name="publicBuisiness3" type="checkbox"
-                                                {{ $operator->publicBuisiness3 == 1 ? "checked" : "" }} disabled>
+                                            <input name="public_buisiness3" type="checkbox"
+                                                {{ $operator->public_buisiness3 == 1 ? "checked" : "" }} disabled>
                                             <label for="">リフォーム工事（工事施工者）</label>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="stop">
                                     <p>
-                                        <input id="stop1" name="publicProject1" type="checkbox"
-                                            {{ $operator->publicProject1 == 0 ? "checked" : "" }} disabled>
+                                        <input id="stop1" name="public_project1" type="checkbox"
+                                            {{ $operator->public_project1 == 0 ? "checked" : "" }} disabled>
                                         <label for="stop1">停止</label>
                                     </p>
                                 </div>
@@ -232,15 +232,15 @@
                             <li>
                                 <div>
                                     <p class="input1 u-margin-bottom-10">
-                                        <input name="publicProject3" type="checkbox"
-                                            {{ $operator->publicProject3 == 1 ? "checked" : "" }} disabled>
+                                        <input name="public_project3" type="checkbox"
+                                            {{ $operator->public_project3 == 1 ? "checked" : "" }} disabled>
                                         <label for="">先進的窓リノベ2024事業</label>
                                     </p>
                                 </div>
                                 <div class="stop">
                                     <p>
-                                        <input id="stop1" name="publicProject3" type="checkbox"
-                                            {{ $operator->publicProject3 == 0 ? "checked" : "" }} disabled>
+                                        <input id="stop1" name="public_project3" type="checkbox"
+                                            {{ $operator->public_project3 == 0 ? "checked" : "" }} disabled>
                                         <label for="stop1">停止</label>
                                     </p>
                                 </div>
@@ -248,27 +248,27 @@
                             <li>
                                 <div>
                                     <p class="input1 u-margin-bottom-10">
-                                        <input name="publicProject2" type="checkbox"
-                                            {{ $operator->publicProject2 == 1 ? "checked" : "" }} disabled>
+                                        <input name="public_project2" type="checkbox"
+                                            {{ $operator->public_project2 == 1 ? "checked" : "" }} disabled>
                                         <label for="">給湯省エネ2024事業</label>
                                     </p>
                                     <ul class="businesslist2">
                                         <li>
-                                            <input name="publicBuisiness5" type="checkbox"
-                                                {{ $operator->publicBuisiness5 == 1 ? "checked" : "" }} disabled>
+                                            <input name="public_buisiness5" type="checkbox"
+                                                {{ $operator->public_buisiness5 == 1 ? "checked" : "" }} disabled>
                                             <label for="">エネルギー小売業者に該当する（電気、ガスの販売について消費者と契約を締結する）</label>
                                         </li>
                                         <li>
-                                            <input name="publicBuisiness4" type="checkbox"
-                                                {{ $operator->publicBuisiness4 == 1 ? "checked" : "" }} disabled>
+                                            <input name="public_buisiness4" type="checkbox"
+                                                {{ $operator->public_buisiness4 == 1 ? "checked" : "" }} disabled>
                                             <label for="">新築リース事業者（申請者と給湯器のリース契約を締結する事業者）分譲住宅の購入（販売事業者、販売代理業者） ※宅地建物取引業者に限ります。</label>
                                         </li>
                                     </ul>
                                 </div>
                                 <div class="stop">
                                     <p>
-                                        <input id="stop1" name="publicProject2" type="checkbox"
-                                            {{ $operator->publicProject2 == 0 ? "checked" : "" }} disabled>
+                                        <input id="stop1" name="public_project2" type="checkbox"
+                                            {{ $operator->public_project2 == 0 ? "checked" : "" }} disabled>
                                         <label for="stop1">停止</label>
                                     </p>
                                 </div>
@@ -300,13 +300,13 @@
                     <div class="not-padding">
                         <ul class="businesslist3">
                             <li>
-                                <input name="privacyPolicyConsent1" type="checkbox"
-                                    {{ $operator->privacyPolicyConsent1 == 1 ? "checked" : "" }} disabled>
+                                <input name="privacy_policy_consent1" type="checkbox"
+                                    {{ $operator->privacy_policy_consent1 == 1 ? "checked" : "" }} disabled>
                                 <label for="">本キャンペーンおよび各事業のプライバシーポリシーをすべて確認し、同意の上で事業者登録申請を行う。</label>
                             </li>
                             <li>
-                                <input name="privacyPolicyConsent2" type="checkbox"
-                                    {{ $operator->privacyPolicyConsent2 == 1 ? "checked" : "" }} disabled>
+                                <input name="privacy_policy_consent2" type="checkbox"
+                                    {{ $operator->privacy_policy_consent2 == 1 ? "checked" : "" }} disabled>
                                 <label for="">住宅省エネポータル利用規約を確認し、同意の上で事業者登録申請を行う。</label>
                             </li>
                         </ul>

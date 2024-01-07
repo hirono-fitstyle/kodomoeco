@@ -79,7 +79,7 @@
                     <dt><span>事業者登録ステータス</span></dt>
                     <dd>
                         <div>
-                            {{ $operator->operatorStatus }}
+                            {{ $operator->operator_status }}
                         </div>
                     </dd>
                 </dl>
@@ -87,7 +87,7 @@
                     <dt><span>登録事業者番号</span></dt>
                     <dd>
                         <div>
-                            {{ $operator->operatorNumber }}
+                            {{ $operator->operator_number }}
                         </div>
                     </dd>
                 </dl>
@@ -101,13 +101,13 @@
                             <ul class="businesslist1">
                                 <li>
                                     <input id="business1" name="operatorCategory" type="radio"
-                                        {{ $operator->operatorCategory == 1 ? "checked" : "" }} required>
+                                        {{ $operator->operator_category == 1 ? "checked" : "" }} required>
                                     <label for="business1">法人</label>
                                     <span class="u-color-text-red">※登録申請書に押印する印鑑が登録された「法人の印鑑証明」と「法人登記」の添付が必要です。</span>
                                 </li>
                                 <li>
                                     <input id="business2" name="operatorCategory" type="radio"
-                                        {{ $operator->operatorCategory == 2 ? "checked" : "" }} required>
+                                        {{ $operator->operator_category == 2 ? "checked" : "" }} required>
                                     <label for="business2">個人事業主</label>
                                     <span class="u-color-text-red">※登録申請書に押印する印鑑が登録された「個人の印鑑証明」の添付が必要です。</span>
                                 </li>
@@ -137,9 +137,9 @@
                                 <dd >
                                     <ul class="businesslist4">
                                         <li>
-                                            <input id="constructionFlag1" name="constructionFlag" type="radio"
-                                                {{ $operator->constructionFlag == 1 ? "checked" : "" }} required>
-                                            <label for="constructionFlag1">あり</label>
+                                            <input id="construction_flag" name="construction_flag" type="radio"
+                                                {{ $operator->construction_flag == 1 ? "checked" : "" }} required>
+                                            <label for="construction_flag">あり</label>
                                             <div class="select-box w150">
                                                 <select id="" name="constructionCategory">
                                                     <option value=""></option>
@@ -154,17 +154,17 @@
                                                 </select>
                                             </div>
                                             <span></span>
-                                            <input type="text" name="constructionPreNumber" value="{{ old('constructionPreNumber', $operator->constructionPreNumber) }}"
+                                            <input type="text" name="construction_pre_number" value="{{ old('constructionPreNumber', $operator->construction_pre_number) }}"
                                                 class="w60" maxlength="3" inputmode="numeric" pattern="\d*">
                                             <span>第</span>
-                                            <input type="text" name="constructionNumber" value="{{ old('constructionNumber', $operator->constructionNumber) }}"
+                                            <input type="text" name="construction_number" value="{{ old('constructionNumber', $operator->construction_number) }}"
                                                 class="w150" maxlength="6" inputmode="numeric" pattern="\d*">
                                             <span>号</span>
                                         </li>
                                         <li>
-                                            <input id="constructionFlag2" name="constructionFlag" type="radio"
-                                                {{ $operator->constructionFlag == 0 ? "checked" : "" }} required>
-                                            <label for="constructionFlag2">なし（申請中を含む）</label>
+                                            <input id="construction_flag" name="construction_flag" type="radio"
+                                                {{ $operator->construction_flag == 0 ? "checked" : "" }} required>
+                                            <label for="construction_flag">なし（申請中を含む）</label>
                                         </li>
                                     </ul>
                                 </dd>
@@ -180,7 +180,7 @@
                     <dd>
                         <div>
                             <p class="u-margin-bottom-10">
-                                <input type="text" name="corpNumber" value="{{ old('corpNumber', $operator->corpNumber) }}"
+                                <input type="text" name="corp_number" value="{{ old('corpNumber', $operator->corp_number) }}"
                                     class="w150" minlength="13" maxlength="13" inputmode="numeric" pattern="\d*" require>
                                 <span class="btn orange left20">法人番号入力完了</span>
                             </p>
@@ -193,8 +193,8 @@
                     <dt><span>法人名（商号または名称）</span></dt>
                     <dd>
                         <div class="entered">
-                            <input class="w500 lock" id="" name="operatorName" type="text"
-                                value="{{ old('operatorName', $operator->operatorName) }}" disabled>
+                            <input class="w500 lock" id="" name="operator_name" type="text"
+                                value="{{ old('operato_name', $operator->operator_name) }}" disabled>
                             <span >※編集できません。</span>
                         </div>
                     </dd>
@@ -204,23 +204,23 @@
                     <dd>
                         <div class="entered">
                             <p class="u-margin-bottom-10"><span class="w60">郵便番号</span>
-                                <input class="w150 lock" id="" name="operatorZipCode" type="text"
-                                    value="{{ old('operatorZipCode', $operator->operatorZipCode) }}" disabled>
+                                <input class="w150 lock" id="" name="operator_zipcode" type="text"
+                                    value="{{ old('operator_zipcode', $operator->operator_zipcode) }}" disabled>
                                 <span>※編集できません。</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">都道府県</span>
-                                <input class="w150 lock" id="" name="operatorPrefecture" type="text"
-                                    value="{{ old('operatorPrefecture', $operator->operatorPrefecture) }}" disabled>
+                                <input class="w150 lock" id="" name="operator_prefecture" type="text"
+                                    value="{{ old('operator_prefecture', $operator->operator_prefecture) }}" disabled>
                                 <span>※編集できません。</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">市区町村</span>
-                                <input class="w150 lock" id="" name="operatorCity" type="text"
-                                    value="{{ old('operatorCity', $operator->operatorCity) }}" disabled>
+                                <input class="w150 lock" id="" name="operator_city" type="text"
+                                    value="{{ old('operator_city', $operator->operator_city) }}" disabled>
                                 <span>※編集できません。</span>
                             </p>
                             <p><span class="w60">以降</span>
-                                <input class="w500 lock" id="" name="operatorAddress" type="text"
-                                    value="{{ old('operatorAddress', $operator->operatorAddress) }}" disabled>
+                                <input class="w500 lock" id="" name="operator_address" type="text"
+                                    value="{{ old('operator_address', $operator->operator_address) }}" disabled>
                                 <span>※編集できません。</span>
                             </p>
                         </div>
@@ -230,8 +230,8 @@
                     <dt><span class="required">代表者肩書</span></dt>
                     <dd>
                         <div class="entered">
-                            <input class="w200" type="text" name="operatorTitle"
-                                value="{{ old('operatorTitle', $operator->operatorTitle) }}" require>
+                            <input class="w200" type="text" name="operator_title"
+                                value="{{ old('operator_title', $operator->operator_title) }}" require>
                             <span>※添付する法人登記と一致すること。</span>
                         </div>
                     </dd>
@@ -240,10 +240,10 @@
                     <dt><span class="required">代表者氏名</span></dt>
                     <dd>
                         <div class="entered">
-                            <span>氏</span><input type="text" name="representativeLastName"
-                                value="{{ old('representativeLastName', $operator->representativeLastName) }}" require>
-                            <span>名</span><input type="text" name="representativeFirstName"
-                                value="{{ old('representativeFirstName', $operator->representativeFirstName) }}" require>
+                            <span>氏</span><input type="text" name="representative_last_name"
+                                value="{{ old('representative_last_name', $operator->representative_last_name) }}" require>
+                            <span>名</span><input type="text" name="representative_first_name"
+                                value="{{ old('representative_first_name', $operator->representative_first_name) }}" require>
                             <span>※添付する法人登記と一致すること。</span>
                         </div>
                     </dd>
@@ -255,10 +255,10 @@
                     <dt><span class="required">氏名</span></dt>
                     <dd>
                         <div class="entered">
-                            <span>氏</span><input type="text" name="representativeLastName"
-                                value="{{ old('representativeLastName', $operator->representativeLastName) }}" require>
-                            <span>名</span><input type="text" name="representativeFirstName"
-                                value="{{ old('representativeFirstName', $operator->representativeFirstName) }}" require>
+                            <span>氏</span><input type="text" name="representative_last_name"
+                                value="{{ old('representative_last_name', $operator->representative_last_name) }}" require>
+                            <span>名</span><input type="text" name="representative_first_name"
+                                value="{{ old('representative_first_name', $operator->representative_first_name) }}" require>
                             <span>※添付する印鑑証明と一致すること。</span>
                         </div>
                     </dd>
@@ -267,8 +267,8 @@
                     <dt><span>屋号（ある場合のみ）</span></dt>
                     <dd>
                         <div class="entered">
-                            <input class="w500 lock" id="" name="operatorName" type="text"
-                                value="{{ old('operatorName', $operator->operatorName) }}" disabled>
+                            <input class="w500 lock" id="" name="operator_name" type="text"
+                                value="{{ old('operator_name', $operator->operator_name) }}" disabled>
                             <span >※編集できません。</span>
                         </div>
                     </dd>
@@ -278,33 +278,33 @@
                     <dd>
                         <div class="entered">
                             <p class="u-margin-bottom-10"><span class="w60">郵便番号</span>
-                                <input class="w150 lock" id="" name="operatorZipCode" type="text"
-                                    value="{{ old('operatorZipCode', $operator->operatorZipCode) }}" disabled>
+                                <input class="w150 lock" id="" name="operator_zipcode" type="text"
+                                    value="{{ old('operator_zipcode', $operator->operator_zipcode) }}" disabled>
                                 <span>※ハイフン（－）不要</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">都道府県</span>
-                                <input class="w150 lock" id="" name="operatorPrefecture" type="text"
-                                    value="{{ old('operatorPrefecture', $operator->operatorPrefecture) }}">
+                                <input class="w150 lock" id="" name="operator_prefecture" type="text"
+                                    value="{{ old('operator_prefecture', $operator->operator_prefecture) }}">
                                 <span>※（○⇒東京都、×⇒東京）</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">市区町村</span>
-                                <input class="w150 lock" id="" name="operatorCity" type="text"
-                                    value="{{ old('operatorCity', $operator->operatorCity) }}">
+                                <input class="w150 lock" id="" name="operator_city" type="text"
+                                    value="{{ old('operator_city', $operator->operator_city) }}">
                                 <span>※（○⇒横浜市西区、×⇒横浜市）</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">丁目番地</span>
-                                <input class="w500 lock" id="" name="operatorAddressSolo" type="text"
-                                    value="{{ old('operatorAddressSolo', $operator->operatorAddressSolo) }}">
+                                <input class="w500 lock" id="" name="operator_address_solo" type="text"
+                                    value="{{ old('operator_address_solo', $operator->operator_address_solo) }}">
                                 <span>※丁目から全角数字。１－１２－３⇒○　1丁目12番3号⇒✕</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">建物名</span>
-                                <input class="w500 lock" id="" name="operatorBuildingSolo" type="text"
-                                    value="{{ old('operatorBuildingSolo', $operator->operatorBuildingSolo) }}">
+                                <input class="w500 lock" id="" name="operator_building_solo" type="text"
+                                    value="{{ old('operator_building_solo', $operator->operator_building_solo) }}">
                                 <span>※ある場合は必ず入力</span>
                             </p>
                             <p><span class="w60">部屋番号</span>
-                                <input class="w500 lock" id="" name="operatorRoomNumberSolo" type="text"
-                                    value="{{ old('operatorRoomNumberSolo', $operator->operatorRoomNumberSolo) }}">
+                                <input class="w500 lock" id="" name="operator_room_number_solo" type="text"
+                                    value="{{ old('operator_room_number_solo', $operator->operator_room_number_solo) }}">
                                 <span>※ある場合は必ず入力</span>
                             </p>
                         </div>
@@ -457,13 +457,13 @@
                         <div class="not-padding">
                             <ul class="businesslist3">
                                 <li>
-                                    <input type="checkbox" name="privacyPolicyConsent1"
-                                        value="{{ old('privacyPolicyConsent1', $operator->privacyPolicyConsent1) }}" {{ $operator->privacyPolicyConsent1 == 1 ? "checked" : "" }} require>
+                                    <input type="checkbox" name="privacy_policy_consent1"
+                                        value="{{ old('privacy_policy_consent1', $operator->privacy_policy_consent1) }}" {{ $operator->privacy_policy_consent1 == 1 ? "checked" : "" }} require>
                                     <label for="">本キャンペーンおよび各事業のプライバシーポリシーをすべて確認し、同意の上で事業者登録申請を行う。</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" name="privacyPolicyConsent2"
-                                        value="{{ old('privacyPolicyConsent2', $operator->privacyPolicyConsent2) }}" {{ $operator->privacyPolicyConsent2 == 1 ? "checked" : "" }} require>
+                                    <input type="checkbox" name="privacy_policy_consent2"
+                                        value="{{ old('privacy_policy_consent2', $operator->privacy_policy_consent2) }}" {{ $operator->privacy_policy_consent2 == 1 ? "checked" : "" }} require>
                                     <label for="">住宅省エネポータル利用規約を確認し、同意の上で事業者登録申請を行う。</label>
                                 </li>
                             </ul>
