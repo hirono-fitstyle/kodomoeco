@@ -3,14 +3,14 @@
 　本メールへは返信できません。
 =================================================
 
-廣野 清志 様
+{{ $user_name }} 様
 
 住宅省エネ2023キャンペーンからのお知らせです。
 
 メールアドレスの変更を受け付けました。
 下記URLをクリックすることで、変更手続きが完了します。
 
-https://portal.jutaku-shoene2023.mlit.go.jp/apl/ecp/app/operator/managerMailAddressChangeComplete?token=e995922b4288b94a89fe205d33b508ef
+{!! htmlspecialchars_decode($verification_url) !!}
 
 ※有効期限は、24時間となっています。
 　24時間以内にアクセスできない場合、最初から変更手続きをしてください。

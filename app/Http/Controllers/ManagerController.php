@@ -9,8 +9,10 @@ use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use \Symfony\Component\HttpFoundation\Response;
 use App\Consts\OperatorStatusConst;
+use Carbon\Carbon;
 
 class ManagerController extends Controller
 {
@@ -95,38 +97,42 @@ class ManagerController extends Controller
 
             if (count($errors) >= 1) {
                 return redirect()->back()->with('errors', $errors);
-            } else {
-                // 認証トークン
-                $verify_token = str_random(32);
+            }
 
-                // アカウントテーブルに認証情報を更新
-                $account = new Account();
-                $account::where('operator_number', $operator_number)
-                        ->update([
-                            'verify_token' => $verify_token,
-                            'verify_expired_at' => Carbon::now()->addHour(24),
-                        ]);
-                    }
-                
-                // 新しいメールアドレス宛に変更受付完了メールを送信
-/*            
-                $emailFrom = 'kiyoshi.hirono@fast-integration.co.jp';
-                $emailTo = $account->email;
-                $subject = '【住宅省エネ2023キャンペーン】メールアドレス変更受付（まだ変更は完了していません）';
+            // 認証トークン
+            $verify_token = str_random(32);
 
-                Mail::send(
-                    'emails.auth.account-issuance-completed', 
-                [
-                    'user_name' => $staff_name,
-                    'operator_id' => $mst_operator->operator_number,
-                    'password' => $initial_password
-                ],
-                    function ($message) use ($emailFrom, $emailTo, $subject) {
-                    $message->from($emailFrom);
-                    $message->to($emailTo);
-                    $message->subject($subject);
-                });
-*/
+            // アカウントテーブルに認証情報を更新
+            Account::where('operator_number', $operator_number)
+                    ->update([
+                        'email_change_token' => $verify_token,
+                        'email_change_expired_at' => Carbon::now()->addHour(24),
+                    ]);
+
+            // 新しいメールアドレス宛に変更受付完了メールを送信
+            $account = Account::where('operator_number', '=', $operator_number)->first();
+            $staff_name = $account->last_name . ' ' . $account->first_name;
+            $verification_url = 'http://localhost/portal/manager/change-mail-address/' . $verify_token;
+
+            $emailFrom = 'kiyoshi.hirono@fast-integration.co.jp';
+            $emailTo = $account->email;
+            $subject = '【住宅省エネ2023キャンペーン】メールアドレス変更受付（まだ変更は完了していません）';
+
+            Mail::send(
+                'emails.auth.verify-email-address2', 
+            [
+                'user_name' => $staff_name,
+                'verification_url' => $verification_url,
+            ],
+                function ($message) use ($emailFrom, $emailTo, $subject) {
+                $message->from($emailFrom);
+                $message->to($emailTo);
+                $message->subject($subject);
+            });
+
+            // 新しいメールアドレスをセッションに記憶
+            $request->session()->put('mail_address_new', $request->mail_address_new);
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -137,8 +143,64 @@ class ManagerController extends Controller
 
         // 変更受付完了画面を表示
         return view('portal.mail_addresses.change-mail-address-request-confirm');
-
     }
+
+    public function showChangeMailAddress(Request $request)
+    {
+        if ($request->has('token')) {
+            // 404エラー
+        }
+        $token = $request->token;
+
+        Log::info('token');
+        Log::info($token);
+
+        DB::beginTransaction();
+        try {
+
+            // TODO メールアドレスの変更は複数回実施しても問題ないので、email_change_verified_atの存在確認は不要？
+            $obj_account = Account::where('email_change_token', $request->token)
+                ->where('email_change_token', '=', $token)
+                ->where('email_change_expired_at', '>=', Carbon::now())
+                // ->whereNull('email_change_verified_at')
+            ;
+
+            if (!$obj_account->exists()) {
+                // メールアドレス変更失敗画面を表示
+                return view('portal.mail_addresses.change-mail-address-failed')->with('errors', ['対象が存在しません。（あるいは既に変更が完了しています）事業者情報を確認してください。']);
+            }
+            $operator_number = $request->session()->get('operator_number');
+
+            // セッションから新しいメールアドレスを取り出す
+            $email = $request->session()->pull("mail_address_new");
+
+            // 事業者テーブルとアカウントテーブルのメールアドレスを更新
+            Operator::where('operator_number', $operator_number)
+            ->update([
+                'staff_mail' => $email,
+            ]);
+            Account::where('operator_number', $operator_number)
+            ->update([
+                'email' => $email,
+            ]);
+
+            // セッションから新しいメールアドレスを削除
+            $email = $request->session()->pull("mail_address_new");
+
+            // TODO 不要？
+            // $request->session()->put('reset_token', $request->token);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+
+            return redirect()->back()->with('alert', __('An error has occurred.'));
+        }
+
+        // メールアドレス変更完了画面を表示
+        return view('portal.mail_addresses.change-mail-address-complete');
+    }
+
     /**
      * 郵便番号から住所情報を取得する
      * 住所情報の取得については「ポストくん」のAPIを使用する。
