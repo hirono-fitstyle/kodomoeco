@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\OperatorStatus;
 use App\Models\Operator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OperatorController extends Controller
 {

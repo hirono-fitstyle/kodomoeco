@@ -72,7 +72,7 @@ class InternalCodesSeeder extends Seeder
             [ 'id' => Uuid::uuid4()->toString(), 'identification_name' => 'CONSTRUCTION_CATEGORY', 'key' => '45', 'value' => '宮崎県知事' ],
             [ 'id' => Uuid::uuid4()->toString(), 'identification_name' => 'CONSTRUCTION_CATEGORY', 'key' => '46', 'value' => '鹿児島県知事' ],
             [ 'id' => Uuid::uuid4()->toString(), 'identification_name' => 'CONSTRUCTION_CATEGORY', 'key' => '47', 'value' => '沖縄県知事' ],
-            [ 'id' => Uuid::uuid4()->toString(), 'identification_name' => 'REAL_ESTATE_CATEGORY', 'key' => '00', 'value' => '国土交通大臣' ],
+            [ 'id' => Uuid::uuid4()->toString(), 'identification_name' => 'CONSTRUCTION_CATEGORY', 'key' => '00', 'value' => '国土交通大臣' ],
             [ 'id' => Uuid::uuid4()->toString(), 'identification_name' => 'REAL_ESTATE_CATEGORY', 'key' => '01', 'value' => '北海道' ],
             [ 'id' => Uuid::uuid4()->toString(), 'identification_name' => 'REAL_ESTATE_CATEGORY', 'key' => '02', 'value' => '青森' ],
             [ 'id' => Uuid::uuid4()->toString(), 'identification_name' => 'REAL_ESTATE_CATEGORY', 'key' => '03', 'value' => '岩手' ],
