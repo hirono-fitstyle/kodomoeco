@@ -61,6 +61,14 @@ Route::middleware('auth')->group(function () {
             Route::get('/detail', [ManagerController::class, 'detail'])->name('detail');
             Route::get('/edit', [ManagerController::class, 'edit'])->name('edit');
             Route::put('/update', [ManagerController::class, 'update'])->name('update');
+
+            Route::get('/change-mail-address-request', [ManagerController::class, 'showChangeMailAddressRequest'])->name('change-mail-address-request');
+            Route::post('/change-mail-address-request', [ManagerController::class, 'showChangeMailAddressRequestConfirm'])->name('change-mail-address-request-confim');
+            Route::post('/change-mail-address-request-complete',[ManagerController::class,'changeMailAddressRequestComplete'])->name('change-mail-address-request-complete');
+            Route::get('/change-mail-address/{token}',[ManagerController::class,'showChangeMailAddress'])->name('change-mail-address');
+            Route::post('/change-mail-address-complete',[ManagerController::class,'changeMailAddressComplete'])->name('change-mail-address-complete');
+        
+            Route::post('/get-address', [ManagerController::class, 'getAddress']);
         });
         // 事業者登録の情報
         Route::prefix('/operator')->name('operator.')->group(function () {
@@ -68,13 +76,15 @@ Route::middleware('auth')->group(function () {
             Route::get('/edit', [OperatorController::class, 'edit'])->name('edit');
             Route::put('/update', [OperatorController::class, 'update'])->name('update');
         });
-            // 添付書類登録画面
-            Route::get('/documentUpload', [OperatorController::class, 'docCreate'])->name('operator.docCreate');
-            // 添付書類登録処理
-            Route::post('/documentUpload', [OperatorController::class, 'docStore'])->name('operator.docStore');
-            // 登録申請画面
-            Route::get('/registration', [OperatorController::class, 'regRequestCreate'])->name('operator.regRequestCreate');
-            // 登録申請処理
-            Route::post('/registration', [OperatorController::class, 'regRequestStore'])->name('operator.regRequestStore');
+        // 添付書類ダウンロード
+        Route::get('/documentDownload', [OperatorController::class, 'docCreate'])->name('operator.docCreate');
+        // 添付書類登録画面
+        Route::get('/documentUpload', [OperatorController::class, 'showDocUpload'])->name('operator.show-doc-upload');
+        // 添付書類登録処理
+        Route::post('/documentUpload', [OperatorController::class, 'docStore'])->name('operator.doc-store');
+        // 登録申請画面
+        Route::get('/registration', [OperatorController::class, 'regRequestCreate'])->name('operator.regRequestCreate');
+        // 登録申請処理
+        Route::post('/registration', [OperatorController::class, 'regRequestStore'])->name('operator.regRequestStore');
     });
 });
