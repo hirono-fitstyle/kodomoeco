@@ -14,9 +14,9 @@ class DocumentDownloadController extends BaseController
     public function index (Request $request)
     {
         try {
-            $operatorId = '600000084';
+            $operatorId = '600000001';
 
-            $operator = Operator::where('operatorId', $operatorId)
+            $operator = Operator::where('operator_id', $operatorId)
                 ->get()
                 ->toArray();
 
@@ -31,8 +31,8 @@ class DocumentDownloadController extends BaseController
                 ->setOption('enable-local-file-access', true)
                 ->setOption('keep-relative-links', true)
                 ->setOption('encoding', 'utf-8')
-                ->setOption('margin-top', '15')
-                ->setOption('margin-bottom', '15')
+                ->setOption('margin-top', '10')
+                ->setOption('margin-bottom', '0')
                 ->setOption('margin-left', '17')
                 ->setOption('margin-right', '17')
                 ;
