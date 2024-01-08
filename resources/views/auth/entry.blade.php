@@ -265,7 +265,7 @@
                     </ul>
                     <div class="p-index-account-btnbox">
                     <p id="confirm-btnbox" class="p-index-account-btnbox__btn btn3">
-                        <a id="confirm-btn" href="{{ route('entry.input') }}" onclick="event.preventDefault(); document.getElementById('form').submit();">
+                        <a id="confirm-btn" class="disabled-link" href="{{ route('entry.input') }}" onclick="event.preventDefault(); document.getElementById('form').submit();">
                             確認画面へ
                         </a>
                     </p>
