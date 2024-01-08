@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/styles.css') }}" >
     <link rel="stylesheet" href="{{ asset('/css/pw_change.css') }}" >
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/common.js'])
 </head>
 
 <body>
@@ -29,6 +30,7 @@
 <main>
     <section class="login">
         <h2 class="u-margin-bottom-60 u-typography-6">パスワードリセット</h2>
+        @include('layouts.result')
         <form class="form" method="POST" action="{{ route('reset-password-complete') }}">
             @csrf
 
@@ -36,25 +38,13 @@
             <dl class="u-margin-bottom-20">
                 <dt>新しいパスワード</dt>
                 <dd>
-                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}" required autocomplete="new password" autofocus>
-
-                    @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                    <input id="password" type="password" class="form-control" name="password" value="{{ old('password') }}" required autocomplete="new password" autofocus>
                 </dd>
             </dl>
             <dl class="u-margin-bottom-30">
                 <dt>新しいパスワードの確認</dt>
                 <dd>
-                    <input id="confirm_password" type="password" class="form-control @error('confirm_password') is-invalid @enderror" name="confirm_password" value="{{ old('confirm_password') }}" required autocomplete="confirm password" autofocus>
-
-                    @error('confirm_password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                    <input id="confirm_password" type="password" class="form-control" name="confirm_password" value="{{ old('confirm_password') }}" required autocomplete="confirm password" autofocus>
                 </dd>
             </dl>
             <p class=" u-margin-bottom-20">パスワードの使い回し（他のシステムやインターネットサービスで同ーパスワードを使用すること）にご注意ください。</p>
@@ -68,8 +58,8 @@
     </section>
 </main>
 
-    <script src="/js/lib/scroll-hint.min.js"></script>
-    <script src="/js/scripts.js"></script>
+    <script src="{{ asset('/js/lib/scroll-hint.min.js') }}"></script>
+    <script src="{{ asset('/js/scripts.js') }}"></script>
 
 </body>
 </html>

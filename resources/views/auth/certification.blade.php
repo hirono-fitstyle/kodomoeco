@@ -81,7 +81,7 @@
             </div>
             <section class="p-index-block">
                 <h3 class="p-index-block__ttl">メール認証確認</h3>
-                <p class="p-index-block__text">メールを送しました。ご確認ください。</p>
+                <p class="p-index-block__text">メールを送信しました。ご確認ください。</p>
                 <div class="p-index-block-result center">
                     <h4 class="p-index-block__ttl">事業者登録は完了していません。</h4>
                     <p>ご入力いただいたメールアドレス宛にメールが送されます。<br>そのメールに記載されたURLにアクセスして次の手続きを行ってください。</p>

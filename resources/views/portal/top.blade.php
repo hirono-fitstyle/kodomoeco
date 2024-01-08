@@ -204,7 +204,7 @@
             <dl class="bg4">
                 <dt><span>法人名<br>（個人事業主は屋号</span> </dt>
                 <dd>
-                    <div>株式会社ＲＨＥＭＳＤｅｓｉｇｎＬａｂ</div>
+                    <div>{{ $operator->operator_name }}</div>
                 </dd>
             </dl>
             <dl class="bg4">
@@ -212,14 +212,14 @@
                 <dd>
                     <div>
                         <ul class="businesslist">
-                            <li><input id="business1" name="" type="checkbox"><label for="business1">こどもエコすまい支援事業</label></li>
-                            <li><input id="business2" name="" type="checkbox"><label for="business2">先進的窓リノベ事業</label></li>
-                            <li><input id="business3" name="" type="checkbox"><label for="business3">給湯省エネ事業</label></li>
-                            <li><input id="business4" name="" type="checkbox"><label for="business4">注文住宅の新築</label></li>
-                            <li><input id="business5" name="" type="checkbox"><label for="business5">新築分譲住宅の購入</label></li>
-                            <li><input id="business6" name="" type="checkbox"><label for="business6">リフォーム工事</label></li>
-                            <li><input id="business7" name="" type="checkbox"><label for="business7">エネルギー小売業者に該当する</label></li>
-                            <li><input id="business8" name="" type="checkbox"><label for="business8">リーズ事業者</label></li>
+                            <li><input id="business1" name="" type="checkbox" {{ $operator->public_project1 == 1 ? "checked" : "" }} disabled><label for="business1">こどもエコすまい支援事業</label></li>
+                            <li><input id="business2" name="" type="checkbox" {{ $operator->public_project3 == 1 ? "checked" : "" }} disabled><label for="business2">先進的窓リノベ事業</label></li>
+                            <li><input id="business3" name="" type="checkbox" {{ $operator->public_project2 == 1 ? "checked" : "" }} disabled><label for="business3">給湯省エネ事業</label></li>
+                            <li><input id="business4" name="" type="checkbox" {{ $operator->public_buisiness1 == 1 ? "checked" : "" }} disabled><label for="business4">注文住宅の新築</label></li>
+                            <li><input id="business5" name="" type="checkbox" {{ $operator->public_buisiness2 == 1 ? "checked" : "" }} disabled><label for="business5">新築分譲住宅の購入</label></li>
+                            <li><input id="business6" name="" type="checkbox" {{ $operator->public_buisiness3 == 1 ? "checked" : "" }} disabled><label for="business6">リフォーム工事</label></li>
+                            <li><input id="business7" name="" type="checkbox" {{ $operator->public_buisiness5 == 1 ? "checked" : "" }} disabled><label for="business7">エネルギー小売業者に該当する</label></li>
+                            <li><input id="business8" name="" type="checkbox" {{ $operator->public_buisiness4 == 1 ? "checked" : "" }} disabled><label for="business8">リーズ事業者</label></li>
                         </ul>
 
                     </div>
@@ -261,11 +261,11 @@
             </dl>
             <dl class="half bg4">
                 <dt><spna>氏</spna></dt>
-                <dd><div>中村</div></dd>
+                <dd><div>{{ $operator->staff_last_name }}</div></dd>
             </dl>
             <dl class="half bg4">
                 <dt><span>名</span></dt>
-                <dd><div>明日香</div></dd>
+                <dd><div>{{ $operator->staff_first_name }}</div></dd>
             </dl>
             <dl class="bg4">
                 <dt><span>メール受信設定</span></dt>
@@ -297,7 +297,7 @@
             </dl>
             <dl class="half bg4">
                 <dt><span>更新日時</span></dt>
-                <dd><div>2023/12/25 14:39</div></dd>
+                <dd><div>{{ $operator->update_at }}</div></dd>
             </dl>
             <dl class="half bg3">
                 <dt><span>公表ステータス</span></dt>
@@ -392,8 +392,8 @@
 
 </main>
 
-<script src="/js/lib/scroll-hint.min.js"></script>
-<script src="/js/scripts.js"></script>
+<script src="{{ asset('/js/lib/scroll-hint.min.js') }}"></script>
+<script src="{{ asset('/js/scripts.js') }}"></script>
 
 </body>
 </html>

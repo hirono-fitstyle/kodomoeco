@@ -23,7 +23,19 @@ class ResetPasswordRequest extends FormRequest
     {
         return [
             'password' => ['regex:/^(?=.*?[a-zA-Z])(?=.*?\d)[a-zA-Z\d]{8,}$/', 'max:255', 'required'],
-            'confirm_password' => 'required|string|min:8|max:255|same:password',
+            'confirm_password' => 'required|same:password',
         ];
+    }
+
+    public function messages()
+    {
+        return [
+            'password.regex' => '新しいパスワードは英数混在で8文字以上を指定してください',
+            'password.max' => '新しいパスワードは255文字以内で指定してください',
+            'password.required' => '新しいパスワードを入力してください',
+            'confirm_password.required' => '新しいパスワードの確認を入力してください',
+            'confirm_password.same' => '新しいパスワードと新しいパスワードの確認の入力が一致しません',
+        ];
+
     }
 }

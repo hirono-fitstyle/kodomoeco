@@ -5,6 +5,11 @@
             @foreach ($errors as $error)
                 <li>{{ $error }}</li>
             @endforeach
+            @if (is_object($errors) and $errors->any())
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            @endif
         </ul>
     @endif
 </div>

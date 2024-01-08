@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/styles.css') }}" >
     <link rel="stylesheet" href="{{ asset('/css/login.css') }}" >
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/common.js'])
 </head>
 
 <body>
@@ -30,30 +31,19 @@
 <main>
     <section class="login">
         <h2 class="u-margin-bottom-60 u-typography-6">ログイン</h2>
+        @include('layouts.result')
         <form class="form" method="POST" action="{{ route('login') }}">
             @csrf
             <dl class="u-margin-bottom-20">
                 <dt>ID</dt>
                 <dd>
-                    <input id="operator_id" type="text" class="form-control @error('operator_id') is-invalid @enderror" name="operator_id" value="{{ old('operator_id') }}" required autocomplete="ID" autofocus>
-
-                    @error('operator_id')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                    <input id="operator_id" type="text" class="form-control" name="operator_id" value="{{ old('operator_id') }}" required autocomplete="ID" autofocus>
                 </dd>
             </dl>
             <dl class="u-margin-bottom-30">
                 <dt>パスワード</dt>
                 <dd>
-                    <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                    @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                    <input id="password" type="password" class="form-control" name="password" required autocomplete="current-password">
                 </dd>
             </dl>
             @if (Route::has('reset-password-request'))
@@ -89,8 +79,8 @@
     </section>
 </main>
 
-    <script src="/js/lib/scroll-hint.min.js"></script>
-    <script src="/js/scripts.js"></script>
+    <script src="{{ asset('/js/lib/scroll-hint.min.js') }}"></script>
+    <script src="{{ asset('/js/scripts.js') }}"></script>
 
 </body>
 </html>

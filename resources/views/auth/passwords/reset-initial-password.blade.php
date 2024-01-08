@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/styles.css') }}" >
     <link rel="stylesheet" href="{{ asset('/css/pw_change.css') }}" >
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/common.js'])
 </head>
 
 <body>
@@ -29,6 +30,7 @@
 <main>
     <section class="login">
         <h2 class="u-margin-bottom-60 u-typography-6">パスワード変更画面</h2>
+        @include('layouts.result')
         <form class="form" method="POST" action="{{ route('portal.reset-initial-password-store') }}">
             @csrf
 
@@ -68,8 +70,8 @@
     </section>
 </main>
 
-    <script src="/js/lib/scroll-hint.min.js"></script>
-    <script src="/js/scripts.js"></script>
+    <script src="{{ asset('/js/lib/scroll-hint.min.js') }}"></script>
+    <script src="{{ asset('/js/scripts.js') }}"></script>
 
 </body>
 </html>

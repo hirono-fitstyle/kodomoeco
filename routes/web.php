@@ -22,10 +22,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes(['verify' => true]);
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
 Route::middleware('guest')->group(function () {
     // 事業者登録
     Route::get('entry',[RegisterAccountController::class,'showRegister'])->name('entry');
@@ -34,6 +30,7 @@ Route::middleware('guest')->group(function () {
     Route::post('entry/confirm',[RegisterAccountController::class,'register'])->name('entry.register');
     Route::get('entry/certification',[RegisterAccountController::class,'certification'])->name('entry.certification');
     Route::get('entry/completion/{token}',[RegisterAccountController::class,'completion'])->name('entry.completion');
+    Route::get('entry/terms-of-service',[RegisterAccountController::class,'showTerms'])->name('entry.terms');
 
     // ポータル
     Route::get('login',[AccountController::class,'showLogin'])->name('show-login');
