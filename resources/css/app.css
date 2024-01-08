@@ -13,3 +13,7 @@
     list-style: disc;
     padding: 20px;
 }
+
+.disabled-link {
+    pointer-events: none;
+}

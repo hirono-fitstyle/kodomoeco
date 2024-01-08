@@ -32,7 +32,6 @@
 
         gtag('config', 'G-DYB5FTRP5M');
     </script>
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/common.js'])
 </head>
 
 <body>
@@ -66,70 +65,20 @@
     <!-- /.p-header --></header>
 
     <section class="p-page-header">
-        <p class="p-page-header__sub">統括アカウント</p>
-        <h1 class="p-page-header__label">住宅省エネ支援事業者登録用 アカウント発行依頼</h1>
+        <h1 class="p-page-header__label">ご指定のページは存在しません。</h1>
         <!-- /.p-page-header --></section>
 
     <section class="p-page">
         <section class="p-index-main">
-            <div class="p-index-flow">
-                <ul class="p-index-flow-liststep">
-                    <li class="p-index-flow-listitem step1"><span>STEP 1</span><br>情報の入力</li>
-                    <li class="p-index-flow-listitem step2 is-active"><span>STEP 2</span><br>入力内容の確認</li>
-                    <li class="p-index-flow-listitem step3"><span>STEP 3</span><br>メール認証確認</li>
-                    <li class="p-index-flow-listitem step4"><span>STEP 4</span><br>発行依頼完了</li>
-                </ul>
-            </div>
-            <form id="form" method="POST" action="{{ route('entry.register') }}">
-                @csrf
-                <section class="p-index-block">
-                    <h3 class="p-index-block__ttl">入力内容の確認</h3>
-                    <p class="p-index-block__text">入力内容に間違いがないことを確認いただき、「送する」ボタンをクリックしてください。</p>
-                    <div class="p-index-from">
-                        <div class="p-index-from-item">
-                            <div class="p-index-from-item__head w250">
-                                <p>あなたの氏名<span class="required">必須</span></p>
-                            </div>
-                            <div class="p-index-from-item__data">
-                                <p>{{ $input['last_name'] . ' ' . $input['first_name'] }}</p>
-                            </div>
-                            <input id="last_name" type="hidden" class="form-control" name="last_name" value="{{ $input['last_name'] }}" required readonly>
-                            <input id="first_name" type="hidden" class="form-control" name="first_name" value="{{ $input['first_name'] }}" required readonly>
-
-                        </div>
-                        <div class="p-index-from-item">
-                            <div class="p-index-from-item__head w250">
-                                <p>メールアドレス<span class="required">必須</span></p>
-                            </div>
-                            <div class="p-index-from-item__data">
-                                <p>{{ $input['email'] }}</p>
-                            </div>
-                            <input id="email" type="hidden" class="form-control" name="email" value="{{ $input['email'] }}" required readonly>
-                        </div>
-                    </div>
-                    <p class="indent emphasis"><span>※</span>メールが受信できない場合、以下をご確認ください。</p>
-                    <ul class="emphasislist">
-                        <li>メールアドレスが正しく入力されているか</li>
-                        <li>迷惑メールフォルダやゴミ箱フォルダに事務局からのメールが入っていないか</li>
-                        <li>以下のドメインからのメールが受できるよう、迷惑メールフィルター等で正しく設定されているか<br>
-                            ●●@mail.jutaku-shoene2023.mlit.go.jp<br>
-                            ●●@jutaku-shoene2023.jp<br>
-                            ●●@kodomo-ecosumai.jp<br>
-                            ●●@window-renovation.jp<br>
-                            ●●@kyutou-shoene.jp</li>
-                    </ul>
-                    <p class="center emphasis">事務局からのメールの到着に、一定の時間を要する場合があります。</p>
-                    <div class="p-index-from-btnbox">
-                        <input id="btn_value" type="hidden" name="btn_value" value="submit" readonly>
-                        <p class="p-index-from-btnbox__btn btn1">
-                            <a id="btn-back" href="javascript:void(0)">入力画面へ戻る</a>
-                        </p>
-                        <p class="p-index-from-btnbox__btn btn2">
-                            <a id="btn-submit" href="javascript:void(0)">送信する</a>
-                        </p>
-                    </div>
-                </section>
-            </form>
+            <section class="p-index-block">
+                <div class="p-index-block-result center">
+                    <h4 class="p-index-block__ttl">ご指定のページは存在しません。</h4>
+                    <p>お手数ですが、URLをご確認の上、再度実行してください。</p>
+                </div>
+                <div class="p-index-from-btnbox">
+                    <p class="p-index-from-btnbox__btn btn2"><a href="">TOPページへ</a></p>
+                </div>
+            </section>
             <ul class="p-index-btnbox">
                 <li class="p-index-btnbox__btn btn-top"><a href="">住宅省エネ2024キャンペーンTOP</a></li>
             </ul>
@@ -167,18 +116,4 @@
     <script src="{{ asset('/js/scripts.js') }}"></script>
 
 </body>
-<script type="module">
-    $(() => {
-        $('#btn-back').on('click', function(){
-            $('#btn_value').val('back');
-            console.log($('#btn_value').val());
-            $('#form').submit();
-        });
-
-        $('#btn-submit').on('click', function(){
-            console.log($('#btn_value').val());
-            $('#form').submit();
-        });
-    })
-</script>
 </html>

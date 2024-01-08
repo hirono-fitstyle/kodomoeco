@@ -142,7 +142,7 @@
                     <li class="p-index-flow-listitem step4"><span>STEP 4</span><br>発行依頼完了</li>
                 </ul>
             </div>
-            <form method="POST" action="{{ route('entry.input') }}">
+            <form id="form" method="POST" action="{{ route('entry.input') }}">
                 @csrf
                 <section class="p-index-block">
                     <h3 class="p-index-block__ttl">情報の入力</h3>
@@ -194,10 +194,10 @@
                                 <p>住宅省エネ2024キャンペーン 住宅省エネポータル利用規約</p>
                             </div>
                             <div class="p-index-from-item__data">
-                                <p class="p-index-from-item__btn btn1"><a href="">確認する</a></p>
+                                <p class="p-index-from-item__btn btn1"><a data-id="terms_service" href="/entry/terms-of-service" target="_blank">確認する</a></p>
                             </div>
                             <div class="p-index-from-item__status">
-                                <p>未完了</p>
+                                <p id="terms_service_status">未完了</p>
                             </div>
                         </div>
                         <div class="p-index-from-item">
@@ -205,10 +205,10 @@
                                 <p>住宅省エネ2024キャンペーン プライバシーポリシー</p>
                             </div>
                             <div class="p-index-from-item__data">
-                                <p class="p-index-from-item__btn btn1"><a href="">確認する</a></p>
+                                <p class="p-index-from-item__btn btn1"><a data-id="privacy_policy_1" href="/entry/terms-of-service" target="_blank">確認する</a></p>
                             </div>
                             <div class="p-index-from-item__status">
-                                <p>未完了</p>
+                                <p id="privacy_policy_1_status">未完了</p>
                             </div>
                         </div>
                         <div class="p-index-from-item">
@@ -216,10 +216,10 @@
                                 <p>子育てエコホーム支援事業 プライバシーポリシー</p>
                             </div>
                             <div class="p-index-from-item__data">
-                                <p class="p-index-from-item__btn btn2"><a href="">確認する</a></p>
+                                <p class="p-index-from-item__btn btn2"><a data-id="privacy_policy_2" href="/entry/terms-of-service" target="_blank">確認する</a></p>
                             </div>
                             <div class="p-index-from-item__status">
-                                <p>未完了</p>
+                                <p id="privacy_policy_2_status">未完了</p>
                             </div>
                         </div>
                         <div class="p-index-from-item">
@@ -227,10 +227,10 @@
                                 <p>先進的窓リノベ2024事業 プライバシーポリシー</p>
                             </div>
                             <div class="p-index-from-item__data">
-                                <p class="p-index-from-item__btn btn3"><a href="">確認する</a></p>
+                                <p class="p-index-from-item__btn btn3"><a data-id="privacy_policy_3" href="/entry/terms-of-service" target="_blank">確認する</a></p>
                             </div>
                             <div class="p-index-from-item__status">
-                                <p>未完了</p>
+                                <p id="privacy_policy_3_status">未完了</p>
                             </div>
                         </div>
                         <div class="p-index-from-item">
@@ -238,10 +238,10 @@
                                 <p>給湯省エネ2024事業 プライバシーポリシー</p>
                             </div>
                             <div class="p-index-from-item__data">
-                                <p class="p-index-from-item__btn btn4"><a href="">確認する</a></p>
+                                <p class="p-index-from-item__btn btn4"><a data-id="privacy_policy_4" href="/entry/terms-of-service" target="_blank">確認する</a></p>
                             </div>
                             <div class="p-index-from-item__status">
-                                <p>未完了</p>
+                                <p id="privacy_policy_4_status">未完了</p>
                             </div>
                         </div>
                         <div class="p-index-from-item">
@@ -249,10 +249,10 @@
                                 <p>賃貸集合給湯省エネ2024事業 プライバシーポリシー</p>
                             </div>
                             <div class="p-index-from-item__data">
-                                <p class="p-index-from-item__btn btn5"><a href="">確認する</a></p>
+                                <p class="p-index-from-item__btn btn5"><a data-id="privacy_policy_5" href="/entry/terms-of-service" target="_blank">確認する</a></p>
                             </div>
                             <div class="p-index-from-item__status">
-                                <p>未完了</p>
+                                <p id="privacy_policy_5_status">未完了</p>
                             </div>
                         </div>
                     </div>
@@ -264,11 +264,11 @@
                         <li><input id="" name="" type="checkbox"><label for="">登録する事業者（個人事業主含む）を代表します。（社外の方、営業担当者向けのアカウントではありません）</label></li>
                     </ul>
                     <div class="p-index-account-btnbox">
-                        <p class="p-index-account-btnbox__btn">
-                            <button type="submit" style="color:#fff;background:#5073b8;width:100%;">
-                                確認画面へ
-                            </button>
-                        </p>
+                    <p id="confirm-btnbox" class="p-index-account-btnbox__btn btn3">
+                        <a id="confirm-btn" href="{{ route('entry.input') }}" onclick="event.preventDefault(); document.getElementById('form').submit();">
+                            確認画面へ
+                        </a>
+                    </p>
                     </div>
                 </section>
             </form>
@@ -309,4 +309,52 @@
     <script src="{{ asset('/js/scripts.js') }}"></script>
 
 </body>
+<script type="module">
+    var check_links = {
+        'terms_service': false,
+        'privacy_policy_1': false,
+        'privacy_policy_2': false,
+        'privacy_policy_3': false,
+        'privacy_policy_4': false,
+        'privacy_policy_5': false
+    }
+
+    $(window).on("load", function () {
+        // 念のため確認リンクの配列を初期化
+        $.each(check_links, function(key, value) {
+            value = false;
+        })
+    });
+
+    $(() => {
+        $('a').on('click', function(){
+            var link_id =  $(this).data('id');
+            
+            if (!check_links[link_id]) {
+                check_links[link_id] = true;
+                $('#' + link_id + '_status').text('完了');
+            }
+
+            var all_link_click = checkAllLinkClick();
+            if (all_link_click) {
+                $('#confirm-btnbox').removeClass('btn3');
+                $('#confirm-btnbox').addClass('btn2');
+                $('#confirm-btn').removeClass('disabled-link');
+            }
+
+        });
+    })
+
+    function checkAllLinkClick() {
+        var res = true;
+        $.each(check_links, function(key, value) {
+            if (value == false) {
+                res = false;
+                return false;
+            }
+        })
+
+        return res;
+    }
+</script>
 </html>

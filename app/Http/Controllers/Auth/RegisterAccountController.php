@@ -66,7 +66,9 @@ class RegisterAccountController extends Controller
     public function register(Request $request)
     {
         // 戻るボタン処理
-        if ($request->has('back')) {
+        $btn_value = $request->btn_value;
+        Log::info($request->all());
+        if ($btn_value == 'back') {
             return redirect('entry')->withInput();
         }
 
@@ -95,7 +97,7 @@ class RegisterAccountController extends Controller
             DB::rollBack();
             Log::error($e);
 
-            return redirect()->back()->with('alert', __('An error has occurred.'));
+            return redirect('entry')->with('errors', ['処理中にエラーが発生しました。お手数ですが最初からやり直してください。']);
         }
 
         return view('auth.certification');
@@ -103,13 +105,10 @@ class RegisterAccountController extends Controller
 
     public function completion(Request $request)
     {
-        if (!$request->has('token')) {
-            // 404エラー
+        if (empty($request->route('token'))) {
+            abort(404);
         }
-        $token = $request->token;
-
-        Log::info('request');
-        Log::info($request->all());
+        $token = $request->route('token');
 
         $obj_account = DB::table('accounts')
         ->where('verify_token', '=', $token)
@@ -118,7 +117,7 @@ class RegisterAccountController extends Controller
 
         if (!$obj_account->exists()) {
             // 404エラー
-            Log::info('account not exists');
+            abort(404);
         }
 
         $account = $obj_account->first();
@@ -174,6 +173,7 @@ class RegisterAccountController extends Controller
             Log::error($e);
 
             // 500エラー画面へ
+            abort(500);
         }
 
         return view('auth.completion');
@@ -238,6 +238,11 @@ class RegisterAccountController extends Controller
         }
 
         return $params;
+    }
+
+    public function showTerms()
+    {
+        return view('auth.terms-of-service');
     }
 
 }

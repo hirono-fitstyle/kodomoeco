@@ -22,8 +22,17 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'operator_id' => 'required|string',
-            'password' => 'required|string',
+            'operator_id' => 'required',
+            'password' => 'required',
         ];
+    }
+
+    public function messages()
+    {
+        return [
+            'operator_id.required' => 'ユーザーIDを入力してください',
+            'password.required' => 'パスワードを入力してください',
+        ];
+
     }
 }
