@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use \Symfony\Component\HttpFoundation\Response;
 use App\Consts\OperatorStatusConst;
+use App\Mail\VerifyEmailAddressMail2;
 use Carbon\Carbon;
 
 class ManagerController extends Controller
@@ -19,10 +20,10 @@ class ManagerController extends Controller
     /**
      * ②本アカウントの利用者の情報 | 詳細画面
      */
-    public function detail()
+    public function detail(Request $request)
     {   
-
-        $operator = Operator::where('operator_id', '=', '600000001')->first();
+        $operator_number = $request->session()->get('operator_number');
+        $operator = Operator::where('operator_number', '=', $operator_number)->first();
 
         return view('portal.manager_detail', compact('operator'));
     }
@@ -30,10 +31,13 @@ class ManagerController extends Controller
     /**
      * ②本アカウントの利用者の情報 | 編集画面
      */
-    public function edit()
+    public function edit(Request $request)
     {
-        $operator = Operator::where('operator_id', '=', '600000001')->first();
-
+        $operator_number = $request->session()->get('operator_number');
+        $operator = Operator::where('operator_number', '=', $operator_number)->first();
+        if (!$operator->exists()) {
+            // 500 エラー
+        }
         return view('portal.manager_edit', compact('operator'));
     }
 
@@ -114,21 +118,8 @@ class ManagerController extends Controller
             $staff_name = $account->last_name . ' ' . $account->first_name;
             $verification_url = 'http://localhost/portal/manager/change-mail-address/' . $verify_token;
 
-            $emailFrom = 'kiyoshi.hirono@fast-integration.co.jp';
             $emailTo = $account->email;
-            $subject = '【住宅省エネ2023キャンペーン】メールアドレス変更受付（まだ変更は完了していません）';
-
-            Mail::send(
-                'emails.auth.verify-email-address2', 
-            [
-                'user_name' => $staff_name,
-                'verification_url' => $verification_url,
-            ],
-                function ($message) use ($emailFrom, $emailTo, $subject) {
-                $message->from($emailFrom);
-                $message->to($emailTo);
-                $message->subject($subject);
-            });
+            Mail::to($emailTo)->send(new VerifyEmailAddressMail2($staff_name, $verification_url));
 
             // 新しいメールアドレスをセッションに記憶
             $request->session()->put('mail_address_new', $request->mail_address_new);
@@ -205,29 +196,35 @@ class ManagerController extends Controller
      * 郵便番号から住所情報を取得する
      * 住所情報の取得については「ポストくん」のAPIを使用する。
      */
-    public function getAddress (Request $request)
+    public function getAddress (Request $request): array
     {
-        $baseUrl = "https://postcode.teraren.com/postcodes/";
-        $zipCode = trim(str_replace("-", "", $request->zipCode));
-        $response = Http::get($baseUrl . $zipCode . ".json");
+        try {
+            $baseUrl = "https://postcode.teraren.com/postcodes/";
+            $zipCode = trim(str_replace("-", "", $request->zipCode));
+            $response = Http::get($baseUrl . $zipCode . ".json");
 
-        switch ($response->status()) {
-            case Response::HTTP_OK:
-                $status = 'ok';
-                $addressList = [
-                    'prefecture' => $response->json()['prefecture'],
-                    'city' => $response->json()['city'],
-                    'street' => $response->json()['suburb'],
-                ];
-                break;
-            case Response::HTTP_NOT_FOUND:
-                $status = 'ok';
-                $addressList = null;
-                break;
-            default:
-                $status = 'ng';
-                $addressList = null;
-                break;
+            switch ($response->status()) {
+                case Response::HTTP_OK:
+                    $status = 'ok';
+                    $addressList = [
+                        'prefecture' => $response->json()['prefecture'],
+                        'city' => $response->json()['city'],
+                        'street' => $response->json()['suburb'],
+                    ];
+                    break;
+                case Response::HTTP_NOT_FOUND:
+                    $status = 'ok';
+                    $addressList = null;
+                    break;
+                default:
+                    $status = 'ng';
+                    $addressList = null;
+                    break;
+            }
+        } catch (Exception $e) {
+            Log::error($e);
+            $status = 'ng';
+            $addressList = null;
         }
 
         return [

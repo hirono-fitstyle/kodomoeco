@@ -31,10 +31,10 @@ class AccountConfirmRequest extends FormRequest
     public function messages()
     {
         return [
-            'last_name.required' => 'The Last Name is required',
-            'first_name.required' => 'The Fisrt Name is required',
-            'email.required' => 'An email address is required',
-            'email.email' => 'The email address must be valid',
+            'last_name.required' => '姓を入力してください。',
+            'first_name.required' => '名を入力してください。',
+            'email.required' => 'メールアドレスを入力してください。',
+            'email.email' => 'メールアドレスの形式で入力してください',
         ];
 
     }

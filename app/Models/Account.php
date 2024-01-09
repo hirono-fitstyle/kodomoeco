@@ -50,6 +50,8 @@ class Account extends Authenticatable implements MustVerifyEmailContract
     protected $casts = [
         'verify_expired_at' => 'datetime',
         'email_verified_at' => 'datetime',
+        'password_reset_expired_at' => 'datetime',
+        'password_reset_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 }

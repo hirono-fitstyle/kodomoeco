@@ -7,6 +7,7 @@ use App\Models\Operator;
 use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\ResetInitialPasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\ResetPasswordRequestRequest;
 use App\Providers\RouteServiceProvider;
@@ -33,33 +34,29 @@ class AccountController extends Controller
         $operator_id = $request->operator_id;
         $password = $request->password;
 
-        $obj_operator = Operator::where('operatorId', '=', $operator_id);
+        $obj_operator = Operator::where('operator_id', '=', $operator_id);
 
         if (!$obj_operator->exists()) {
-            // アカウント存在なしエラー
-            Log::info('アカウント存在なしエラー');
-            return redirect()->back()->with('alert', __('An error has occurred.'));
+            return redirect()->back()->with('errors', ['指定されたユーザーが存在しないか、パスワードが違います。']);
         }
 
         $operator = $obj_operator->first();
 
-        $obj_account = Account::where('operator_number', '=', $operator->operatorNumber);
+        $obj_account = Account::where('operator_number', '=', $operator->operator_number);
         $account = $obj_account->first();
 
         if (!password_verify($password, $account->password)) {
-            // パスワード不一致エラー
-            Log::info('パスワード不一致エラー');
-            return redirect()->back()->with('alert', __('An error has occurred.'));
+            return redirect()->back()->with('errors', ['指定されたユーザーが存在しないか、パスワードが違います。']);
         }
 
         $request->session()->regenerate();
 
         // セッションに保存
-        $request->session()->put('operator_number', $operator->operatorNumber);
+        $request->session()->put('operator_number', $operator->operator_number);
         $request->session()->put('operator_id', $operator_id);
         $request->session()->put('password', $password);
 
-        $request->merge(['operator_number' => $operator->operatorNumber]);
+        $request->merge(['operator_number' => $operator->operator_number]);
         $credentials = $request->validate([
             'operator_number' => ['required'],
             'password' => ['required'],
@@ -82,7 +79,7 @@ class AccountController extends Controller
         return view('auth.passwords.reset-initial-password');
     }
 
-    public function showPortalResetInitialPasswordStore(Request $request)
+    public function showPortalResetInitialPasswordStore(ResetInitialPasswordRequest $request)
     {
         $operator_number = $request->session()->get('operator_number');
         DB::beginTransaction();
@@ -106,9 +103,8 @@ class AccountController extends Controller
 
     public function showPortalTop(Request $request)
     {
-        Log::info($request->session()->all());
-        $operator = Operator::where('operatorNumber', '=', $request->session()->get('operator_number'))->first();
-        $request->session()->put('staff_name', $operator->staffLastName . ' ' . $operator->staffFirstName);
+        $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'))->first();
+        $request->session()->put('staff_name', $operator->staff_last_name . ' ' . $operator->staff_first_name);
 
         return view('portal.top', compact('operator'));
     }
@@ -120,10 +116,10 @@ class AccountController extends Controller
 
     public function resetPasswordRequestConfirm(ResetPasswordRequestRequest $request)
     {
-        $obj_operator = Operator::where('operatorId', '=', $request->operator_id)
-            ->where('staffLastName', '=', $request->last_name)
-            ->where('staffFirstName', '=', $request->first_name)
-            ->where('staffMail', '=', $request->email);
+        $obj_operator = Operator::where('operator_id', '=', $request->operator_id)
+            ->where('staff_last_name', '=', $request->last_name)
+            ->where('staff_first_name', '=', $request->first_name)
+            ->where('staff_mail', '=', $request->email);
 
         if (!$obj_operator->exists()) {
             return redirect()->back()->with('alert', __('Account not found.'));
@@ -131,24 +127,16 @@ class AccountController extends Controller
 
         $operator = $obj_operator->first();
 
-        $request->session()->put('operator_number', $operator->operatorNumber);
-        $request->session()->put('operator_id', $operator->operatorId);
+        $request->session()->put('operator_number', $operator->operator_number);
+        $request->session()->put('operator_id', $operator->operator_id);
         $request->session()->put('email', $request->email);
 
         $split_email = explode("@", $request->email);
 
-        Log::info('★ resetPasswordRequestConfirm info★');
-        Log::info($request);
-        Log::info($split_email);
-
         $domain_length = strlen($split_email[1]);
         $tail_str = substr($split_email[1], $domain_length - 1);
         $front_str = substr($split_email[1], 0, $domain_length - 1);
-        Log::info($front_str);
-        Log::info($tail_str);
         $mask_email = Str::mask($split_email[0], '*', 1) . '@' . Str::mask($front_str, '*', 1) . $tail_str;
-        Log::info('mask_email');
-        Log::info($mask_email);
 
         return view('auth.passwords.reset-password-request-confirm')->with(['mask_email' => $mask_email]);
     }
@@ -176,7 +164,7 @@ class AccountController extends Controller
             DB::rollBack();
             Log::error($e);
 
-            return redirect()->back()->with('alert', __('An error has occurred.'));
+            return redirect()->back()->with('errors', ['エラーが発生しました。お手数ですが、再度実行してください。']);
         }
 
         return view('auth.passwords.reset-password-request-complete');
@@ -208,16 +196,16 @@ class AccountController extends Controller
             ]);
             $account->save();
 
-            $mst_operator = Operator::where('operatorNumber', '=', $account->operator_number)->first();
+            $mst_operator = Operator::where('operator_number', '=', $account->operator_number)->first();
 
-            Mail::to($mst_operator->staffMail)->send(new ResetPasswordComplete($mst_operator->operatorId));
+            Mail::to($mst_operator->staff_mail)->send(new ResetPasswordComplete($mst_operator->operator_id));
 
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e);
 
-            return redirect()->back()->with('alert', __('An error has occurred.'));
+            return redirect()->back()->with('errors', ['エラーが発生しました。お手数ですが、再度実行してください。']);
         }
 
         return view('auth.passwords.reset-complete');
@@ -236,11 +224,11 @@ class AccountController extends Controller
             $account = Account::where('operator_number', $operator_number)->first();
             
             if (!password_verify($request->current_password, $account->password)) {
-                return redirect()->back()->with('error_message', '現在のパスワードが一致しません。');
+                return redirect()->back()->with('errors', ['現在のパスワードが一致しません。']);
             }
 
             if ($request->current_password == $request->new_password) {
-                return redirect()->back()->with('error_message', '新しいパスワードと現在のパスワードは同じにできません。');
+                return redirect()->back()->with('errors', ['新しいパスワードと現在のパスワードは同じにできません。']);
             }
             
             $account->fill([
@@ -254,7 +242,7 @@ class AccountController extends Controller
             DB::rollBack();
             Log::error($e);
             
-            return redirect()->back()->with('alert', __('An error has occurred.'));
+            return redirect()->back()->with('errors', ['エラーが発生しました。お手数ですが、再度実行してください。']);
         }
 
         return redirect()->route('portal.change-password')->with('password_changed', true);
