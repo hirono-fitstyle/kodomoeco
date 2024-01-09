@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use \Symfony\Component\HttpFoundation\Response;
 use App\Consts\OperatorStatusConst;
+use App\Mail\VerifyEmailAddressMail2;
 use Carbon\Carbon;
 
 class ManagerController extends Controller
@@ -117,21 +118,8 @@ class ManagerController extends Controller
             $staff_name = $account->last_name . ' ' . $account->first_name;
             $verification_url = 'http://localhost/portal/manager/change-mail-address/' . $verify_token;
 
-            $emailFrom = 'kiyoshi.hirono@fast-integration.co.jp';
             $emailTo = $account->email;
-            $subject = '【住宅省エネ2023キャンペーン】メールアドレス変更受付（まだ変更は完了していません）';
-
-            Mail::send(
-                'emails.auth.verify-email-address2', 
-            [
-                'user_name' => $staff_name,
-                'verification_url' => $verification_url,
-            ],
-                function ($message) use ($emailFrom, $emailTo, $subject) {
-                $message->from($emailFrom);
-                $message->to($emailTo);
-                $message->subject($subject);
-            });
+            Mail::to($emailTo)->send(new VerifyEmailAddressMail2($staff_name, $verification_url));
 
             // 新しいメールアドレスをセッションに記憶
             $request->session()->put('mail_address_new', $request->mail_address_new);
