@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/detail', [OperatorController::class, 'detail'])->name('detail');
             Route::get('/edit', [OperatorController::class, 'edit'])->name('edit');
             Route::put('/update', [OperatorController::class, 'update'])->name('update');
+            Route::patch('/update-status', [OperatorController::class, 'updateStatus'])->name('update-status');
         });
         // 添付書類ダウンロード
         Route::get('/documentDownload', [OperatorController::class, 'docCreate'])->name('operator.docCreate');
