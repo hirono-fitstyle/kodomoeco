@@ -226,7 +226,9 @@
                 </dd>
             </dl>
         </div>
-        <p class="bg5 ttl1 u-margin-bottom-10">事業者情報の登録・更新</p>
+        <a class="white" href="{{ route('portal.operator.detail') }}">
+            <p class="bg5 ttl1 u-margin-bottom-10">事業者情報の登録・更新</p>
+        </a>
         <p class="indent u-margin-bottom-60"><span>※</span>情報の更新後、専用ポータル・担当者アカウントへの反映には一定時間を要します。</p>
         <div class="detailbox u-margin-bottom-30">
             <p class="u-typography-7 important ">※重要※ 住宅省エネ2024キャンペーンへの参加申告</p>

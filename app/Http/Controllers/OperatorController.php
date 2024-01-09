@@ -17,8 +17,7 @@ class OperatorController extends Controller
      */
     public function detail(Request $request)
     {
-        // $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'))->first();
-        $operator = Operator::where('operator_number', '=', 'S001395')->first(); // 仮コード 本番時は上記に切り替える
+        $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'))->first();
         // TODO: 以下、Enumではなくinternal_codesテーブルからステータス文字列を取得する方法に変更する
         $operator->operator_status_description = OperatorStatus::getDescription($operator->operator_status);
         $operator->construction_category_value =
@@ -34,8 +33,7 @@ class OperatorController extends Controller
      */
     public function updateStatus(Request $request)
     {
-        // $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'));
-        $operator = Operator::where('operator_number', '=', 'S001395'); // 仮コード 本番時は上記に切り替える
+        $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'));
 
         DB::beginTransaction();
         try {
@@ -63,8 +61,7 @@ class OperatorController extends Controller
      */
     public function edit(Request $request)
     {
-        // $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'))->first();
-        $operator = Operator::where('operator_number', '=', 'S001395')->first();
+        $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'))->first();
         // TODO: 以下、Enumではなくinternal_codesテーブルからステータス文字列を取得する方法に変更する
         $operator->operator_status = OperatorStatus::getDescription($operator->operator_status);
 
@@ -77,49 +74,58 @@ class OperatorController extends Controller
     public function update(OperatorUpdateRequest $request)
     {
         // 保存ボタン押下時の処理（TODO: OperatorUpdateRequest内で処理をしたいが仮保存の際は不要なため実装検討中）
-        if ($request->has('save')) {
+        if ($request->has('permanent_save_button')) {
             $request->validate([
                 'operator_category' => 'required',
                 'oath' => 'required',
                 'construction_flag' => 'required',
-                'construction_category' => '55がありの場合',
-                'construction_category2' => '55がありの場合',
-                'construction_pre_number' => '55がありの場合|max:3',
-                'construction_number' => '55がありの場合|max:6',
-                'corp_number' => 'required|max:13',
+                'construction_category' => 'required_if:construction_flag,1',
+                'construction_category2' => 'required_if:construction_flag,1',
+                'construction_pre_number' => 'required_if:construction_flag,1|max:3',
+                'construction_number' => 'required_if:construction_flag,1|max:6',
                 // 'operator_name' => '',
                 'operator_zipcode' => 'required',
                 'operator_prefecture' => 'required',
                 'operator_city' => 'required',
-                'operator_address' => 'required', // 法人のみ
-                'operator_title' => 'required', // 法人のみ
                 'representative_last_name' => 'required',
                 'representative_first_name' => 'required',
-                'operator_address_solo' => 'required', // 個人のみ
                 // 'operator_building_solo' => '',
                 // 'operator_room_number_solo' => '',
-                'public_project1' => 'public_project2もしくわpublic_project3、public_project4が未選択', // 子育てエコホーム支援事業
-                'public_project2' => 'public_project1もしくわpublic_project3、public_project4が未選択', // 給湯省エネ2024事業
-                'public_project3' => 'public_project1もしくわpublic_project2、public_project4が未選択', // 先進的窓リノベ2024事業
-                'public_project4' => 'public_project1もしくわpublic_project2、public_project3が未選択', // 賃貸集合給湯省エネ2024事業
+                'public_project1' => 'required_without_all:public_project2,public_project3,public_project4', // 子育てエコホーム支援事業
+                'public_project2' => 'required_without_all:public_project1,public_project3,public_project4', // 給湯省エネ2024事業
+                'public_project3' => 'required_without_all:public_project1,public_project2,public_project4', // 先進的窓リノベ2024事業
+                'public_project4' => 'required_without_all:public_project1,public_project2,public_project3', // 賃貸集合給湯省エネ2024事業
                 // 'public_buisiness1' => '', // 注文住宅の新築（建築事業者、工事請負業者）
                 // 'public_buisiness2' => '', // 新築分譲住宅の購入（販売事業者、販売代理業者）
                 // 'public_buisiness3' => '', // リフォーム工事（工事施工者）
                 // 'public_buisiness4' => '', // 新築リース事業者（申請者と給湯器のリース契約を締結する事業者）
                 // 'public_buisiness5' => '', // エネルギー小売業者に該当する（電気、ガスの販売について消費者と契約を締結する）
-                'real_estate_category' => 'public_buisiness2が選択されている時必須',
-                'real_estate_pre_number' => 'public_buisiness2が選択されている時必須|max:3',
-                'real_estate_number' => 'public_buisiness2が選択されている時必須|max:6',
-                'reform_flag' => 'public_buisiness3が選択されている時必須',
-                'reform_association' => 'reform_flagがありな場合',
-                'reform_association_url' => 'reform_flagがありな場合|url',
+                'real_estate_category' => 'required_if:public_buisiness2,1',
+                'real_estate_pre_number' => 'required_if:public_buisiness2,1|max:3',
+                'real_estate_number' => 'required_if:public_buisiness2,1|max:6',
+                'reform_flag' => 'required_if:public_buisiness3,1',
+                'reform_association' => 'required_if:reform_flag,1',
+                'reform_association_url' => 'required_if:reform_flag,1|url',
                 'privacy_policy_consent1' => 'required',
                 'privacy_policy_consent2' => 'required'
             ]);
+            // 法人のみ
+            if ($request->operator_category == 1) {
+                $request->validate([
+                    'corp_number' => 'required|max:13',
+                    'operator_address' => 'required',
+                    'operator_title' => 'required',
+                ]);
+            }
+            // 個人のみ
+            if ($request->operator_category == 2) {
+                $request->validate([
+                    'operator_address_solo' => 'required',
+                ]);
+            }
         }
 
-        // $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'));
-        $operator = Operator::where('operator_number', '=', 'S001395'); // 仮コード 本番時は上記に切り替える
+        $operator = Operator::where('operator_number', '=', $request->session()->get('operator_number'));
 
         DB::beginTransaction();
         try {

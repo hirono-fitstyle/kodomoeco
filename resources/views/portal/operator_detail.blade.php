@@ -532,17 +532,57 @@
         </div>
         <!-- フェーズ2で実装 -->
     </div>
-    <div class="flow">
-        <ul>
-            <li class="flowitem">利用者登録</li>
-            <li class="flowitem">再編集</li>
-            <li class="flowitem">編集完了</li>
-            <li class="flowitem">申請書出力</li>
-            <li class="flowitem">書類添付</li>
-            <li class="flowitem">登録申請</li>
-            <li><a href="">TOPに戻る</a></li>
-        </ul>
-    </div>
+    <form action="{{ route('portal.operator.update-status') }}" method="POST">
+        @method('PATCH')
+        @csrf
+        <div class="flow">
+            <ul>
+                <li class="flowitem"><a href="{{ route('portal.manager.detail') }}">利用者登録</a></li>
+                <!-- TODO: リファクタリングする -->
+                <!-- 新規登録 --><!-- 審査中 -->
+                @if($operator->operator_status == 0 || $operator->operator_status == 3)
+                <li class="flowitem">編集</li>
+                <li class="flowitem">編集完了</li>
+                <li class="flowitem">申請書出力</li>
+                <li class="flowitem">書類添付</li>
+                <li class="flowitem">登録申請</li>
+                @endif
+                <!-- 編集中 -->
+                @if($operator->operator_status == 1)
+                <li class="flowitem">
+                    <a href="{{ route('portal.operator.edit') }}">編集</a>
+                </li>
+                <li class="flowitem">
+                    <input class="change-status-button" name="edit-complete-button" value="編集完了" type="submit"
+                        onclick="return confirm('事業者申請を完了にします。\nよろしいですか？')">
+                </li>
+                <li class="flowitem">申請書出力</li>
+                <li class="flowitem">書類添付</li>
+                <li class="flowitem">登録申請</li>
+                @endif
+                <!-- 編集完了 -->
+                @if($operator->operator_status == 2)
+                <li class="flowitem">
+                    <input class="change-status-button" name="re-edit-button" value="再編集" type="submit"
+                        onclick="return confirm('事業者申請を作成中に戻します。\nよろしいですか？')">
+                </li>
+                <li class="flowitem">編集完了</li>
+                <li class="flowitem">
+                    <a href="#">申請書出力</a>
+                </li>
+                <li class="flowitem">
+                    <a href="#">書類添付</a>
+                </li>
+                <li class="flowitem">
+                    <a href="#">登録申請</a>
+                </li>
+                @endif
+                <!-- 修正依頼、承認済、登録却下は未定 -->
+                <!-- TODO: リファクタリングする -->
+                <li><a href="{{ route('portal.top') }}">TOPに戻る</a></li>
+            </ul>
+        </div>
+    </form>
 </main>
 </body>
 </html>

@@ -7,14 +7,14 @@
     <meta content="住宅省エネ2024キャンペーン" name="keyword">
     <meta content="IE=Edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width" name="viewport">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/business.css') }}">
-    @vite('resources/js/operator-edit.js')
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/common.js', 'resources/js/operator-edit.js'])
 </head>
-
 <body>
 <header>
     <p class="note">ブラウザの「戻る」ボタンは使用できません</p>
@@ -72,6 +72,7 @@
                 </a>
             </p>
         </div>
+        @include('layouts.result')
         <p class=" u-margin-bottom-30"><span class="u-color-text-red">＊</span>は必ず入力してください。</p>
         <div class="bg2 u-margin-bottom-60">
             <div class="detailbox u-margin-bottom-60">
@@ -144,6 +145,7 @@
                                             <div class="select-box w150">
                                                 <select id="construction_category" name="construction_category">
                                                     <option value="" @if (old('construction_category', '') == $operator->construction_category) selected @endif></option>
+                                                    <!-- TODO: 以下、$keyno値が01、1の際に挙動がおかしいので修正必要 -->
                                                     @foreach($operator->getInternalCodes('construction_category') as $key => $value)
                                                     <option value="{{ $key }}" @if (old('construction_category', $key) == $operator->construction_category) selected @endif>
                                                         {{ $value }}
@@ -290,7 +292,7 @@
                             <p class="u-margin-bottom-10"><span class="w60">郵便番号</span>
                                 <input class="w150 lock" id="indiv_operator_zipcode" name="operator_zipcode" type="text"
                                     value="{{ old('operator_zipcode', $operator->operator_zipcode) }}">
-                                <span>※ハイフン（－）不要</span>
+                                <span id="getOperatorAddress" class="btn orange">住所検索</span> ※ハイフン（－）不要
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">都道府県</span>
                                 <input class="w150 lock" id="indiv_operator_prefecture" name="operator_prefecture" type="text"
@@ -669,5 +671,41 @@
         </div>
     </form>
 </main>
+<script type="module">
+    $(() => {
+        // 住所情報の取得
+        $('#getOperatorAddress').on('click', () => {
+            $.ajax({
+                url: '{{ url('/portal/manager/get-address') }}',
+                type: 'POST',
+                dataType: 'json',
+                data : { zipCode : $('#indiv_operator_zipcode').val() },
+                timeout: 3000,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                }
+            }).done(function(response) {
+                if (response.existInputZipCode) {
+                    if (response.status == "ok") {
+                        if (response.addressList) {
+                            $('#indiv_operator_prefecture').val(response.addressList.prefecture)
+                            $('#indiv_operator_city').val(response.addressList.city)
+                            $('#indiv_operator_address_solo').val(response.addressList.street)
+                        } else {
+                            alert("該当する住所はありません。")
+                        }
+                    } else {
+                        alert("対象の郵便番号の取得に失敗しました。")
+                    }
+                } else {
+                    alert("対象の郵便番号の取得に失敗しました。")
+                }
+            }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest, errorThrown);
+                alert("対象の郵便番号の取得に失敗しました。")
+            })
+        })
+    })
+</script>
 </body>
 </html>
