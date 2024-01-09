@@ -44,6 +44,16 @@ Route::middleware('guest')->group(function () {
     Route::post('reset-password-request-complete',[AccountController::class,'resetPasswordRequestComplete'])->name('reset-password-request-complete');
     Route::get('reset-password/{token}',[AccountController::class,'showResetPassword'])->name('reset-password');
     Route::post('reset-password-complete',[AccountController::class,'resetPasswordComplete'])->name('reset-password-complete');
+
+    Route::prefix('portal')->name('portal.')->group(function () {
+        // 事業者登録の情報
+        Route::prefix('/operator')->name('operator.')->group(function () {
+            Route::get('/detail', [OperatorController::class, 'detail'])->name('detail');
+            Route::get('/edit', [OperatorController::class, 'edit'])->name('edit');
+            Route::put('/update', [OperatorController::class, 'update'])->name('update');
+            Route::patch('/update-status', [OperatorController::class, 'updateStatus'])->name('update-status');
+        });
+    });
 });
 
 Route::middleware('auth')->group(function () {
@@ -65,12 +75,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/edit', [ManagerController::class, 'edit'])->name('edit');
             Route::put('/update', [ManagerController::class, 'update'])->name('update');
         });
-        // 事業者登録の情報
-        Route::prefix('/operator')->name('operator.')->group(function () {
-            Route::get('/detail', [OperatorController::class, 'detail'])->name('detail');
-            Route::get('/edit', [OperatorController::class, 'edit'])->name('edit');
-            Route::put('/update', [OperatorController::class, 'update'])->name('update');
-        });
+        // // 事業者登録の情報
+        // Route::prefix('/operator')->name('operator.')->group(function () {
+        //     Route::get('/detail', [OperatorController::class, 'detail'])->name('detail');
+        //     Route::get('/edit', [OperatorController::class, 'edit'])->name('edit');
+        //     Route::put('/update', [OperatorController::class, 'update'])->name('update');
+        // });
             // 添付書類登録画面
             Route::get('/documentUpload', [OperatorController::class, 'docCreate'])->name('operator.docCreate');
             // 添付書類登録処理

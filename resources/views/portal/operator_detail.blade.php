@@ -60,17 +60,57 @@
     <p class="u-color-text-red u-margin-bottom-30">1.まず【0】から利用者（あなた）の情報を登録してください。<br>
         2.【1】から【4】の順に事業者登録の手続きを進めてください。<br>
         3.【3】申請書については出力・押印後、【4】書類添付してください。 （出力後に【１】再編集をした場合、申請書も更新されます。再度出力してください。）</p>
-    <div class="flow u-margin-bottom-60">
-        <ul>
-            <li class="flowitem"><a href="{{ route('portal.manager.detail') }}">利用者登録</a></li>
-            <li class="flowitem"><a href="{{ route('portal.operator.edit') }}">編集</a></li>
-            <li class="flowitem">編集完了</li>
-            <li class="flowitem">申請書出力</li>
-            <li class="flowitem">書類添付</li>
-            <li class="flowitem">登録申請</li>
-            <li><a href="">TOPに戻る</a></li>
-        </ul>
-    </div>
+    <form action="{{ route('portal.operator.update-status') }}" method="POST">
+        @method('PATCH')
+        @csrf
+        <div class="flow u-margin-bottom-60">
+            <ul>
+                <li class="flowitem"><a href="{{ route('portal.manager.detail') }}">利用者登録</a></li>
+                <!-- TODO: リファクタリングする -->
+                <!-- 新規登録 --><!-- 審査中 -->
+                @if($operator->operator_status == 0 || $operator->operator_status == 3)
+                <li class="flowitem">編集</li>
+                <li class="flowitem">編集完了</li>
+                <li class="flowitem">申請書出力</li>
+                <li class="flowitem">書類添付</li>
+                <li class="flowitem">登録申請</li>
+                @endif
+                <!-- 編集中 -->
+                @if($operator->operator_status == 1)
+                <li class="flowitem">
+                    <a href="{{ route('portal.operator.edit') }}">編集</a>
+                </li>
+                <li class="flowitem">
+                    <input class="change-status-button" name="edit-complete-button" value="編集完了" type="submit"
+                        onclick="return confirm('事業者申請を完了にします。\nよろしいですか？')">
+                </li>
+                <li class="flowitem">申請書出力</li>
+                <li class="flowitem">書類添付</li>
+                <li class="flowitem">登録申請</li>
+                @endif
+                <!-- 編集完了 -->
+                @if($operator->operator_status == 2)
+                <li class="flowitem">
+                    <input class="change-status-button" name="re-edit-button" value="再編集" type="submit"
+                        onclick="return confirm('事業者申請を作成中に戻します。\nよろしいですか？')">
+                </li>
+                <li class="flowitem">編集完了</li>
+                <li class="flowitem">
+                    <a href="#">申請書出力</a>
+                </li>
+                <li class="flowitem">
+                    <a href="#">書類添付</a>
+                </li>
+                <li class="flowitem">
+                    <a href="#">登録申請</a>
+                </li>
+                @endif
+                <!-- 修正依頼、承認済、登録却下は未定 -->
+                <!-- TODO: リファクタリングする -->
+                <li><a href="{{ route('portal.top') }}">TOPに戻る</a></li>
+            </ul>
+        </div>
+    </form>
     <div class="bg2 u-margin-bottom-60">
         <div class="detailbox u-margin-bottom-60">
             <div class="ttl3">管理情報</div>
@@ -78,7 +118,7 @@
                 <dt><span>事業者登録ステータス</span></dt>
                 <dd>
                     <div>
-                        {{ $operator->operator_status }}
+                        {{ $operator->operator_status_description }}
                     </div>
                 </dd>
             </dl>
@@ -130,11 +170,17 @@
             <dl class="bg4">
                 <dt><span>建設業許可の有無</span></dt>
                 <dd>
+                    @if($operator->construction_flag == 0)
                     <div>なし</div>
-                    <!-- 建設業許可区分＋" "+建設業許可区分2+"-"+建設業許可更新番号+" 第"+建設業許可番号+"号" -->
+                    @elseif($operator->construction_flag == 1)
+                    <div>
+                        {{ $operator->construction_category_value }} {{ $operator->construction_category2_value }}-{{ $operator->construction_pre_number }} 第{{ $operator->construction_number }}号
+                    </div>
+                    @endif
                 </dd>
             </dl>
         </div>
+        @if($operator->operator_category == 1)
         <h4 class="u-typography-6 u-margin-bottom-20">② 法人の情報</h4>
         <div class="detailbox u-margin-bottom-60">
             <dl class="bg4">
@@ -161,7 +207,7 @@
                 <dt><span>所在地<br>（本店または主たる事業所）</span></dt>
                 <dd>
                     <div>
-                        {{ preg_replace("/(\d{3})(\d{4})/", "$1 - $2", $operator->operator_zipCode) }}<br>
+                        {{ preg_replace("/(\d{3})(\d{4})/", "$1 - $2", $operator->operator_zipcode) }}<br>
                         {{ $operator->getAddress($operator->operator_category) }}
                     </div>
                 </dd>
@@ -185,6 +231,38 @@
                 </dd>
             </dl>
         </div>
+        @endif
+        @if($operator->operator_category == 2)
+        <h4 class="u-typography-6 u-margin-bottom-20">② 個人事業主の情報</h4>
+        <div class="detailbox u-margin-bottom-60">
+            <dl class="bg4">
+                <dt><span>氏名</span></dt>
+                <dd>
+                    <div>
+                        {{ $operator->representative_last_name }} {{ $operator->representative_first_name }}
+                        ※添付する印鑑証明と一致すること。
+                    </div>
+                </dd>
+            </dl>
+            <dl class="bg4">
+                <dt><span>屋号（ある場合のみ）</span></dt>
+                <dd>
+                    <div>
+                        {{ $operator->operator_name }}
+                    </div>
+                </dd>
+            </dl>
+            <dl class="bg4">
+                <dt><span>住所</span></dt>
+                <dd>
+                    <div>
+                        {{ preg_replace("/(\d{3})(\d{4})/", "$1 - $2", $operator->operator_zipcode) }}<br>
+                        {{ $operator->getAddress($operator->operator_category) }}
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        @endif
         <h4 class="u-typography-6 u-margin-bottom-20">③ 参加する事業</h4>
         <div class="detailbox u-margin-bottom-60">
             <dl class="bg4">
@@ -223,8 +301,8 @@
                                 </div>
                                 <div class="stop">
                                     <p>
-                                        <input id="stop1" name="public_project1" type="checkbox"
-                                            {{ $operator->public_project1 == 0 ? "checked" : "" }} disabled>
+                                        <input id="stop1" name="public_project_abolish_flag1" type="checkbox"
+                                            {{ $operator->public_project_abolish_flag1 == 1 ? "checked" : "" }} disabled>
                                         <label for="stop1">停止</label>
                                     </p>
                                 </div>
@@ -239,8 +317,8 @@
                                 </div>
                                 <div class="stop">
                                     <p>
-                                        <input id="stop1" name="public_project3" type="checkbox"
-                                            {{ $operator->public_project3 == 0 ? "checked" : "" }} disabled>
+                                        <input id="stop1" name="public_project_abolish_flag3" type="checkbox"
+                                            {{ $operator->public_project_abolish_flag3 == 1 ? "checked" : "" }} disabled>
                                         <label for="stop1">停止</label>
                                     </p>
                                 </div>
@@ -267,8 +345,8 @@
                                 </div>
                                 <div class="stop">
                                     <p>
-                                        <input id="stop1" name="public_project2" type="checkbox"
-                                            {{ $operator->public_project2 == 0 ? "checked" : "" }} disabled>
+                                        <input id="stop1" name="public_project_abolish_flag2" type="checkbox"
+                                            {{ $operator->public_project_abolish_flag2 == 1 ? "checked" : "" }} disabled>
                                         <label for="stop1">停止</label>
                                     </p>
                                 </div>
@@ -276,13 +354,15 @@
                             <li>
                                 <div>
                                     <p class="input1 u-margin-bottom-10">
-                                        <input type="checkbox">
+                                        <input name="public_project4" type="checkbox"
+                                            {{ $operator->public_project4 == 1 ? "checked" : "" }} disabled>
                                         <label for="">賃貸集合給湯省エネ2024事業</label>
                                     </p>
                                 </div>
                                 <div class="stop">
                                     <p>
-                                        <input id="stop1" name="" type="checkbox">
+                                        <input id="stop1" name="public_project_abolish_flag4" type="checkbox"
+                                            {{ $operator->public_project_abolish_flag4 == 1 ? "checked" : "" }} disabled>
                                         <label for="stop1">停止</label>
                                     </p>
                                 </div>
@@ -466,3 +546,21 @@
 </main>
 </body>
 </html>
+
+<style>
+    input.change-status-button {
+	margin: 0;
+	padding: 0;
+	background: none;
+	border: none;
+	border-radius: 0;
+	outline: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+    color: #f57d14;
+    text-decoration: underline;
+    font: inherit;
+    cursor:pointer
+}
+</style>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Operator extends Model
 {
@@ -92,5 +93,68 @@ class Operator extends Model
         }
 
         return $address;
+    }
+
+    /**
+     * internal_codesから必要なデータを取得する
+     * identification_nameで指定した値をキーバリュー形式で全て返却する
+     *
+     * @return Illuminate\Support\Collection
+     */
+    public function getInternalCodes($name): Collection
+    {
+        $identification_name = '';
+        if ($name == 'construction_category') {
+            $identification_name = 'CONSTRUCTION_CATEGORY';
+        }
+        if ($name == 'reform_association') {
+            $identification_name = 'REFORM_ASSOCIATION';
+        }
+        if ($name == 'real_estate_category') {
+            $identification_name = 'REAL_ESTATE_CATEGORY';
+        }
+
+        return InternalCode::where('identification_name', $identification_name)
+            ->orderBy('key')
+            ->pluck('value', 'key');
+    }
+
+    /**
+     * 建設業許可区分の取得
+     * 数字とついになる文字列をInternalCodeから探して返却する
+     *
+     * @var string
+     * @return string
+     */
+    public function getConstructionCategoryValue($key): string
+    {
+        if (is_null($key)) {
+            $construction_categoies = collect();
+        } else {
+            $construction_categoies = InternalCode::where('identification_name', 'CONSTRUCTION_CATEGORY')
+            ->where('key', $key)->first()->value;
+        }
+
+        return $construction_categoies;
+    }
+
+    /**
+     * 建設業許可区分2の取得
+     * 数字とついになる文字列を返却する
+     *
+     * @var string
+     * @return string
+     */
+    public function getConstructionCategory2Value($key): string
+    {
+        $construction_category2 = '';
+        if ($key == 1) {
+            $construction_category2 = '般';
+        }
+        if ($key == 2) {
+            $construction_category2 = '特';
+        }
+
+        return $construction_category2;
     }
 }

@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/business.css') }}">
+    @vite('resources/js/operator-edit.js')
 </head>
 
 <body>
@@ -100,13 +101,13 @@
                         <div>
                             <ul class="businesslist1">
                                 <li>
-                                    <input id="business1" name="operatorCategory" type="radio"
+                                    <input id="business1" name="operator_category" type="radio" value="1"
                                         {{ $operator->operator_category == 1 ? "checked" : "" }} required>
                                     <label for="business1">法人</label>
                                     <span class="u-color-text-red">※登録申請書に押印する印鑑が登録された「法人の印鑑証明」と「法人登記」の添付が必要です。</span>
                                 </li>
                                 <li>
-                                    <input id="business2" name="operatorCategory" type="radio"
+                                    <input id="business2" name="operator_category" type="radio" value="2"
                                         {{ $operator->operator_category == 2 ? "checked" : "" }} required>
                                     <label for="business2">個人事業主</label>
                                     <span class="u-color-text-red">※登録申請書に押印する印鑑が登録された「個人の印鑑証明」の添付が必要です。</span>
@@ -120,9 +121,9 @@
                     <dd>
                         <div>
                             <p class="check">
-                                <input id="a" name="oath" type="checkbox"
-                                    {{ $operator->oath == 1 ? "checked" : "" }} required>
-                                <label for="a">以下に該当しません。 （法人においては、役員等（実質的に経営に関与する者を含む））</label>
+                                <input id="oath" name="oath" type="checkbox" value="1"
+                                    {{ $operator->oath == 1 ? "checked" : "" }}>
+                                <label for="oath">以下に該当しません。 （法人においては、役員等（実質的に経営に関与する者を含む））</label>
                             </p>
                             <p>暴力団（暴力団員による不当な行為の防止等に関する法律（平成３年法律第７７号）第２条第２号に規定する暴力団をいう。以下同じ。）又は暴力団員（同条第６号に規定する暴力団員をいう。以下同じ。）である者、不正の利益を図る目的若しくは第三者に損害を加える目的をもって暴力団若しくは暴力団員を利用している者、資金等の供給若しくは便宜の供与等により直接的あるいは積極的に暴力団の維持、運営に協力し、若しくは関与している者、又は暴力団若しくは暴力団員であることを知りながらこれと社会的に非難されるべき関係を有している者</p>
                         </div>
@@ -137,34 +138,39 @@
                                 <dd >
                                     <ul class="businesslist4">
                                         <li>
-                                            <input id="construction_flag" name="construction_flag" type="radio"
+                                            <input id="construction_flag1" name="construction_flag" type="radio" value="1"
                                                 {{ $operator->construction_flag == 1 ? "checked" : "" }} required>
-                                            <label for="construction_flag">あり</label>
+                                            <label for="construction_flag1">あり</label>
                                             <div class="select-box w150">
-                                                <select id="" name="constructionCategory">
-                                                    <option value=""></option>
-                                                    <option value=""></option>
+                                                <select id="construction_category" name="construction_category">
+                                                    <option value="" @if (old('construction_category', '') == $operator->construction_category) selected @endif></option>
+                                                    @foreach($operator->getInternalCodes('construction_category') as $key => $value)
+                                                    <option value="{{ $key }}" @if (old('construction_category', $key) == $operator->construction_category) selected @endif>
+                                                        {{ $value }}
+                                                    </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <span>許可</span>
                                             <div class="select-box w60">
-                                                <select id="" name="constructionCategory2">
-                                                    <option value=""></option>
-                                                    <option value=""></option>
+                                                <select id="construction_category2" name="construction_category2">
+                                                    <option value="" @if (old('construction_category2', '') == $operator->construction_category2) selected @endif></option>
+                                                    <option value="1" @if (old('construction_category2', '1') == $operator->construction_category2) selected @endif>般</option>
+                                                    <option value="2" @if (old('construction_category2', '2') == $operator->construction_category2) selected @endif>特</option>
                                                 </select>
                                             </div>
                                             <span></span>
-                                            <input type="text" name="construction_pre_number" value="{{ old('constructionPreNumber', $operator->construction_pre_number) }}"
+                                            <input id="construction_pre_number" type="text" name="construction_pre_number" value="{{ old('constructionPreNumber', $operator->construction_pre_number) }}"
                                                 class="w60" maxlength="3" inputmode="numeric" pattern="\d*">
                                             <span>第</span>
-                                            <input type="text" name="construction_number" value="{{ old('constructionNumber', $operator->construction_number) }}"
+                                            <input id="construction_number" type="text" name="construction_number" value="{{ old('constructionNumber', $operator->construction_number) }}"
                                                 class="w150" maxlength="6" inputmode="numeric" pattern="\d*">
                                             <span>号</span>
                                         </li>
                                         <li>
-                                            <input id="construction_flag" name="construction_flag" type="radio"
+                                            <input id="construction_flag2" name="construction_flag" type="radio" value="0"
                                                 {{ $operator->construction_flag == 0 ? "checked" : "" }} required>
-                                            <label for="construction_flag">なし（申請中を含む）</label>
+                                            <label for="construction_flag2">なし（申請中を含む）</label>
                                         </li>
                                     </ul>
                                 </dd>
@@ -174,14 +180,14 @@
                 </dl>
             </div>
             <h4 class="u-typography-6 u-margin-bottom-20">② 法人の情報</h4>
-            <div class="detailbox u-margin-bottom-60">
+            <div id="sub-form1" class="detailbox u-margin-bottom-60">
                 <dl class="bg4">
                     <dt class="required"><span>法人番号</span></dt>
                     <dd>
                         <div>
                             <p class="u-margin-bottom-10">
-                                <input type="text" name="corp_number" value="{{ old('corpNumber', $operator->corp_number) }}"
-                                    class="w150" minlength="13" maxlength="13" inputmode="numeric" pattern="\d*" require>
+                                <input id="corp_number" type="text" name="corp_number" value="{{ old('corpNumber', $operator->corp_number) }}"
+                                    class="w150" minlength="13" maxlength="13" inputmode="numeric" pattern="\d*">
                                 <span class="btn orange left20">法人番号入力完了</span>
                             </p>
                             <a href="https://www.houjin-bangou.nta.go.jp/" target="_blank" rel="noopener noreferrer"><span class="btn white">国税庁HP</span></a>
@@ -193,8 +199,9 @@
                     <dt><span>法人名（商号または名称）</span></dt>
                     <dd>
                         <div class="entered">
-                            <input class="w500 lock" id="" name="operator_name" type="text"
-                                value="{{ old('operato_name', $operator->operator_name) }}" disabled>
+                            <input class="w500 lock" name="operator_name" type="text"
+                                value="{{ old('operator_name', $operator->operator_name) }}" disabled>
+                            <input type="hidden" id="operator_name" name="operator_name" value="{{ $operator->operator_name }}">
                             <span >※編集できません。</span>
                         </div>
                     </dd>
@@ -204,23 +211,27 @@
                     <dd>
                         <div class="entered">
                             <p class="u-margin-bottom-10"><span class="w60">郵便番号</span>
-                                <input class="w150 lock" id="" name="operator_zipcode" type="text"
+                                <input class="w150 lock" name="operator_zipcode" type="text"
                                     value="{{ old('operator_zipcode', $operator->operator_zipcode) }}" disabled>
+                                <input type="hidden" id="operator_zipcode" name="operator_zipcode" value="{{ $operator->operator_zipcode }}">
                                 <span>※編集できません。</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">都道府県</span>
-                                <input class="w150 lock" id="" name="operator_prefecture" type="text"
+                                <input class="w150 lock" name="operator_prefecture" type="text"
                                     value="{{ old('operator_prefecture', $operator->operator_prefecture) }}" disabled>
+                                <input type="hidden" id="operator_prefecture" name="operator_prefecture" value="{{ $operator->operator_prefecture }}">
                                 <span>※編集できません。</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">市区町村</span>
-                                <input class="w150 lock" id="" name="operator_city" type="text"
+                                <input class="w150 lock" name="operator_city" type="text"
                                     value="{{ old('operator_city', $operator->operator_city) }}" disabled>
+                                <input type="hidden" id="operator_city" name="operator_city" value="{{ $operator->operator_city }}">
                                 <span>※編集できません。</span>
                             </p>
                             <p><span class="w60">以降</span>
-                                <input class="w500 lock" id="" name="operator_address" type="text"
+                                <input class="w500 lock" name="operator_address" type="text"
                                     value="{{ old('operator_address', $operator->operator_address) }}" disabled>
+                                <input type="hidden" id="operator_address" name="operator_address" value="{{ $operator->operator_address }}">
                                 <span>※編集できません。</span>
                             </p>
                         </div>
@@ -230,8 +241,8 @@
                     <dt><span class="required">代表者肩書</span></dt>
                     <dd>
                         <div class="entered">
-                            <input class="w200" type="text" name="operator_title"
-                                value="{{ old('operator_title', $operator->operator_title) }}" require>
+                            <input class="w200" id="operator_title" type="text" name="operator_title"
+                                value="{{ old('operator_title', $operator->operator_title) }}">
                             <span>※添付する法人登記と一致すること。</span>
                         </div>
                     </dd>
@@ -240,25 +251,25 @@
                     <dt><span class="required">代表者氏名</span></dt>
                     <dd>
                         <div class="entered">
-                            <span>氏</span><input type="text" name="representative_last_name"
-                                value="{{ old('representative_last_name', $operator->representative_last_name) }}" require>
-                            <span>名</span><input type="text" name="representative_first_name"
-                                value="{{ old('representative_first_name', $operator->representative_first_name) }}" require>
+                            <span>氏</span><input type="text" id="representative_last_name" name="representative_last_name"
+                                value="{{ old('representative_last_name', $operator->representative_last_name) }}">
+                            <span>名</span><input type="text" id="representative_first_name" name="representative_first_name"
+                                value="{{ old('representative_first_name', $operator->representative_first_name) }}">
                             <span>※添付する法人登記と一致すること。</span>
                         </div>
                     </dd>
                 </dl>
             </div>
             <h4 class="u-typography-6 u-margin-bottom-20">② 個人事業主の情報</h4>
-            <div class="detailbox u-margin-bottom-60">
+            <div id="sub-form2" class="detailbox u-margin-bottom-60">
                 <dl class="bg4">
                     <dt><span class="required">氏名</span></dt>
                     <dd>
                         <div class="entered">
-                            <span>氏</span><input type="text" name="representative_last_name"
-                                value="{{ old('representative_last_name', $operator->representative_last_name) }}" require>
-                            <span>名</span><input type="text" name="representative_first_name"
-                                value="{{ old('representative_first_name', $operator->representative_first_name) }}" require>
+                            <span>氏</span><input type="text" id="indiv_representative_last_name" name="representative_last_name"
+                                value="{{ old('representative_last_name', $operator->representative_last_name) }}">
+                            <span>名</span><input type="text" id="indiv_representative_first_name" name="representative_first_name"
+                                value="{{ old('representative_first_name', $operator->representative_first_name) }}">
                             <span>※添付する印鑑証明と一致すること。</span>
                         </div>
                     </dd>
@@ -267,43 +278,42 @@
                     <dt><span>屋号（ある場合のみ）</span></dt>
                     <dd>
                         <div class="entered">
-                            <input class="w500 lock" id="" name="operator_name" type="text"
-                                value="{{ old('operator_name', $operator->operator_name) }}" disabled>
-                            <span >※編集できません。</span>
+                            <input class="w500 lock" id="indiv_operator_name" name="operator_name" type="text"
+                                value="{{ old('operator_name', $operator->operator_name) }}">
                         </div>
                     </dd>
                 </dl>
                 <dl class="bg4">
-                    <dt><span>所在地<br>（本店または主たる事業所）</span></dt>
+                    <dt><span class="required">住所</span></dt>
                     <dd>
                         <div class="entered">
                             <p class="u-margin-bottom-10"><span class="w60">郵便番号</span>
-                                <input class="w150 lock" id="" name="operator_zipcode" type="text"
-                                    value="{{ old('operator_zipcode', $operator->operator_zipcode) }}" disabled>
+                                <input class="w150 lock" id="indiv_operator_zipcode" name="operator_zipcode" type="text"
+                                    value="{{ old('operator_zipcode', $operator->operator_zipcode) }}">
                                 <span>※ハイフン（－）不要</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">都道府県</span>
-                                <input class="w150 lock" id="" name="operator_prefecture" type="text"
+                                <input class="w150 lock" id="indiv_operator_prefecture" name="operator_prefecture" type="text"
                                     value="{{ old('operator_prefecture', $operator->operator_prefecture) }}">
                                 <span>※（○⇒東京都、×⇒東京）</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">市区町村</span>
-                                <input class="w150 lock" id="" name="operator_city" type="text"
+                                <input class="w150 lock" id="indiv_operator_city" name="operator_city" type="text"
                                     value="{{ old('operator_city', $operator->operator_city) }}">
                                 <span>※（○⇒横浜市西区、×⇒横浜市）</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">丁目番地</span>
-                                <input class="w500 lock" id="" name="operator_address_solo" type="text"
+                                <input class="w500 lock" id="indiv_operator_address_solo" name="operator_address_solo" type="text"
                                     value="{{ old('operator_address_solo', $operator->operator_address_solo) }}">
                                 <span>※丁目から全角数字。１－１２－３⇒○　1丁目12番3号⇒✕</span>
                             </p>
                             <p class="u-margin-bottom-10"><span class="w60">建物名</span>
-                                <input class="w500 lock" id="" name="operator_building_solo" type="text"
+                                <input class="w500 lock" id="indiv_operator_building_solo" name="operator_building_solo" type="text"
                                     value="{{ old('operator_building_solo', $operator->operator_building_solo) }}">
                                 <span>※ある場合は必ず入力</span>
                             </p>
                             <p><span class="w60">部屋番号</span>
-                                <input class="w500 lock" id="" name="operator_room_number_solo" type="text"
+                                <input class="w500 lock" id="indiv_operator_room_number_solo" name="operator_room_number_solo" type="text"
                                     value="{{ old('operator_room_number_solo', $operator->operator_room_number_solo) }}">
                                 <span>※ある場合は必ず入力</span>
                             </p>
@@ -324,28 +334,42 @@
                             <ul class="business">
                                 <li>
                                     <div class="">
-                                        <p class="input1 u-margin-bottom-10"><input type="checkbox"><label for="">子育てエコホーム支援事業</label></p>
+                                        <p class="input1 u-margin-bottom-10">
+                                            <input id="public_project1" name="public_project1" type="checkbox" value="1"
+                                                {{ $operator->public_project1 == 1 ? "checked" : "" }}>
+                                            <label for="public_project1">子育てエコホーム支援事業</label>
+                                        </p>
                                         <ul class="businesslist2 u-margin-bottom-30">
                                             <li>
-                                                <input type="checkbox"><label for="">注文住宅の新築（建築事業者、工事請負業者）</label>
+                                                <input id="public_buisiness1" name="public_buisiness1" type="checkbox" value="1"
+                                                    {{ $operator->public_buisiness1 == 1 ? "checked" : "" }}>
+                                                <label for="public_buisiness1">注文住宅の新築（建築事業者、工事請負業者）</label>
                                             </li>
                                             <li>
-                                                <input type="checkbox"><label class="u-margin-bottom-20" for="">新築分譲住宅の購入（販売事業者、販売代理業者） ※宅地建物取引業者に限ります。</label>
+                                                <input id="public_buisiness2" name="public_buisiness2" type="checkbox" value="1"
+                                                    {{ $operator->public_buisiness2 == 1 ? "checked" : "" }}>
+                                                <label class="u-margin-bottom-20" for="public_buisiness2">新築分譲住宅の購入（販売事業者、販売代理業者） ※宅地建物取引業者に限ります。</label>
                                                 <dl class="column2">
                                                     <dt class="w120"><span>宅地建物取引業免許</span></dt>
                                                     <dd>
                                                         <ul class="businesslist4">
                                                             <li>
                                                                 <div class="select-box w120">
-                                                                    <select id="" name="">
-                                                                        <option value=""></option>
-                                                                        <option value=""></option>
+                                                                    <select id="real_estate_category" name="real_estate_category">
+                                                                        <option value="" @if (old('real_estate_category', '') == $operator->real_estate_category) selected @endif></option>
+                                                                        @foreach($operator->getInternalCodes('real_estate_category') as $key => $value)
+                                                                        <option value="{{ $key }}" @if (old('real_estate_category', $key) == $operator->real_estate_category) selected @endif>
+                                                                            {{ $value }}
+                                                                        </option>
+                                                                        @endforeach
                                                                     </select>
                                                                 </div>
                                                                 <span>許可</span>
-                                                                <input class="w60" type="text">
+                                                                <input id="real_estate_pre_number" class="w60" type="text" name="real_estate_pre_number"
+                                                                    value="{{ old('real_estate_pre_number', $operator->real_estate_pre_number) }}">
                                                                 <span>第</span>
-                                                                <input class="w120" type="text">
+                                                                <input id="real_estate_number" class="w120" type="text" name="real_estate_number"
+                                                                    value="{{ old('real_estate_number', $operator->real_estate_number) }}">
                                                                 <span>号</span>
                                                             </li>
                                                         </ul>
@@ -353,21 +377,29 @@
                                                 </dl>
                                             </li>
                                             <li>
-                                                <input type="checkbox"><label class="u-margin-bottom-20" for="">リフォーム工事（工事施工者）</label>
+                                                <input id="public_buisiness3" name="public_buisiness3" type="checkbox" value="1"
+                                                    {{ $operator->public_buisiness3 == 1 ? "checked" : "" }}>
+                                                <label class="u-margin-bottom-20" for="public_buisiness3">リフォーム工事（工事施工者）</label>
                                                 <dl class="column2">
                                                     <dt class="w150"><span>住宅リフォーム事業者団体登録</span></dt>
                                                     <dd>
                                                         <ul class="businesslist4 flex">
                                                             <li>
-                                                                <input type="checkbox"><label for="">あり</label>
+                                                                <input id="reform_flag1" name="reform_flag" type="radio" value="1"
+                                                                    {{ $operator->reform_flag == 1 ? "checked" : "" }}>
+                                                                <label for="reform_flag1">あり</label>
                                                                 <div>
                                                                     <dl>
                                                                         <dt>登録団体</dt>
                                                                         <dd>
                                                                             <div class="select-box w120">
-                                                                                <select id="" name="">
-                                                                                    <option value=""></option>
-                                                                                    <option value=""></option>
+                                                                                <select id="reform_association" name="reform_association">
+                                                                                    <option value="" @if (old('reform_association', '') == $operator->reform_association) selected @endif></option>
+                                                                                    @foreach($operator->getInternalCodes('reform_association') as $key => $value)
+                                                                                    <option value="{{ $key }}" @if (old('reform_association', $key) == $operator->reform_association) selected @endif>
+                                                                                        {{ $value }}
+                                                                                    </option>
+                                                                                    @endforeach
                                                                                 </select>
                                                                             </div>
                                                                         </dd>
@@ -375,16 +407,18 @@
                                                                     <dl>
                                                                         <dt>URL</dt>
                                                                         <dd>
-                                                                            <input type="text">
+                                                                            <input id="reform_association_url" name="reform_association_url" type="text"
+                                                                                value="{{ old('reform_association_url', $operator->reform_association_url) }}">
                                                                         </dd>
                                                                     </dl>
                                                                     <p class="indent"><span>※</span>登録している団体のホームページで、自社が掲載されているページを指定してください。 ※本キャンペーンのホームページでの公表を希望している場合、公表されます。</p>
                                                                     <p class="indent"><span>※</span>本キャンペーンのホームページでの公表を希望している場合、公表されます。</p>
-
                                                                 </div>
                                                             </li>
                                                             <li>
-                                                                <input type="checkbox"><label for="">なし（申請中を含む）</label>
+                                                                <input id="reform_flag2" name="reform_flag" type="radio" value="0"
+                                                                    {{ $operator->reform_flag == 0 ? "checked" : "" }}>
+                                                                <label for="reform_flag2">なし（申請中を含む）</label>
                                                             </li>
                                                         </ul>
                                                     </dd>
@@ -401,12 +435,19 @@
                                         </dl>
                                     </div>
                                     <div class="stop">
-                                        <p><input id="stop1" name="" type="checkbox"><label for="stop1">停止</label></p>
+                                        <p>
+                                            <input id="stop1" name="public_project_abolish_flag1" type="checkbox" disabled>
+                                            <label for="stop1">停止</label>
+                                        </p>
                                     </div>
                                 </li>
                                 <li>
                                     <div>
-                                        <p class="input1 u-margin-bottom-10"><input type="checkbox"><label for="">先進的窓リノベ2024事業</label></p>
+                                        <p class="input1 u-margin-bottom-10">
+                                            <input id="public_project3" name="public_project3" type="checkbox" value="1"
+                                                {{ $operator->public_project3 == 1 ? "checked" : "" }}>
+                                            <label for="public_project3">先進的窓リノベ2024事業</label>
+                                        </p>
                                         <dl class="conditions">
                                             <dt>先進的窓リノベ事業への参加条件</dt>
                                             <dd>
@@ -414,34 +455,55 @@
                                                 <p class="indent"><span>※</span>事業期間中に事業者登録規約（先進的窓リノベ事業）第8条禁止事項に規定する行為または、 第9条登録の停止に相当する行為を行った者は、交付申請の受付および事業者登録情報の公表を停止します。</p>
                                             </dd>
                                         </dl>
-
                                     </div>
-
                                     <div class="stop">
-                                        <p><input id="stop1" name="" type="checkbox"><label for="stop1">停止</label></p>
+                                        <p>
+                                            <input id="stop1" name="public_project_abolish_flag3" type="checkbox" disabled>
+                                            <label for="stop1">停止</label>
+                                        </p>
                                     </div>
                                 </li>
                                 <li>
                                     <div>
-                                        <p class="input1 u-margin-bottom-10"><input type="checkbox"><label for="">給湯省エネ2024事業</label></p>
+                                        <p class="input1 u-margin-bottom-10">
+                                            <input id="public_project2" name="public_project2" type="checkbox" value="1"
+                                                {{ $operator->public_project2 == 1 ? "checked" : "" }}>
+                                            <label for="public_project2">給湯省エネ2024事業</label>
+                                        </p>
                                         <p class="u-margin-bottom-20">以下、該当する場合はチェックをいれてください。</p>
                                         <ul class="businesslist2">
-                                            <li><input type="checkbox"><label for="">エネルギー小売業者に該当する（電気、ガスの販売について消費者と契約を締結する）</label></li>
-                                            <li><input type="checkbox"><label for="">新築リース事業者（申請者と給湯器のリース契約を締結する事業者）分譲住宅の購入（販売事業者、販売代理業者） ※宅地建物取引業者に限ります。</label></li>
+                                            <li>
+                                                <input id="public_buisiness5" name="public_buisiness5" type="checkbox" value="1"
+                                                    {{ $operator->public_buisiness5 == 1 ? "checked" : "" }}>
+                                                <label for="public_buisiness5">エネルギー小売業者に該当する（電気、ガスの販売について消費者と契約を締結する）</label></li>
+                                            <li>
+                                                <input id="public_buisiness4" name="public_buisiness4" type="checkbox" value="1"
+                                                    {{ $operator->public_buisiness4 == 1 ? "checked" : "" }}>
+                                                <label for="public_buisiness4">新築リース事業者（申請者と給湯器のリース契約を締結する事業者）分譲住宅の購入（販売事業者、販売代理業者） ※宅地建物取引業者に限ります。</label></li>
                                         </ul>
                                     </div>
                                     <div class="stop">
-                                        <p><input id="stop1" name="" type="checkbox"><label for="stop1">停止</label></p>
+                                        <p>
+                                            <input id="stop1" name="public_project_abolish_flag2" type="checkbox" disabled>
+                                            <label for="stop1">停止</label>
+                                        </p>
                                     </div>
                                 </li>
                                 <li>
                                     <div>
-                                        <p class="input1 u-margin-bottom-10"><input type="checkbox"><label for="">賃貸集合給湯省エネ2024事業</label></p>
+                                        <p class="input1 u-margin-bottom-10">
+                                            <input id="public_project4" name="public_project4" type="checkbox" value="1"
+                                                {{ $operator->public_project4 == 1 ? "checked" : "" }}>
+                                            <label for="public_project4">賃貸集合給湯省エネ2024事業</label>
+                                        </p>
                                         <p>テキストが入ります</p>
 
                                     </div>
                                     <div class="stop">
-                                        <p><input id="stop1" name="" type="checkbox"><label for="stop1">停止</label></p>
+                                        <p>
+                                            <input id="stop1" name="public_project_abolish_flag4" type="checkbox" disabled>
+                                            <label for="stop1">停止</label>
+                                        </p>
                                     </div>
                                 </li>
                             </ul>
@@ -457,14 +519,14 @@
                         <div class="not-padding">
                             <ul class="businesslist3">
                                 <li>
-                                    <input type="checkbox" name="privacy_policy_consent1"
-                                        value="{{ old('privacy_policy_consent1', $operator->privacy_policy_consent1) }}" {{ $operator->privacy_policy_consent1 == 1 ? "checked" : "" }} require>
-                                    <label for="">本キャンペーンおよび各事業のプライバシーポリシーをすべて確認し、同意の上で事業者登録申請を行う。</label>
+                                    <input id="privacy_policy_consent1" type="checkbox" name="privacy_policy_consent1" value="1"
+                                        {{ $operator->privacy_policy_consent1 == 1 ? "checked" : "" }}>
+                                    <label for="privacy_policy_consent1">本キャンペーンおよび各事業のプライバシーポリシーをすべて確認し、同意の上で事業者登録申請を行う。</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" name="privacy_policy_consent2"
-                                        value="{{ old('privacy_policy_consent2', $operator->privacy_policy_consent2) }}" {{ $operator->privacy_policy_consent2 == 1 ? "checked" : "" }} require>
-                                    <label for="">住宅省エネポータル利用規約を確認し、同意の上で事業者登録申請を行う。</label>
+                                    <input id="privacy_policy_consent2" type="checkbox" name="privacy_policy_consent2" value="1"
+                                        {{ $operator->privacy_policy_consent2 == 1 ? "checked" : "" }}>
+                                    <label for="privacy_policy_consent2">住宅省エネポータル利用規約を確認し、同意の上で事業者登録申請を行う。</label>
                                 </li>
                             </ul>
                         </div>
