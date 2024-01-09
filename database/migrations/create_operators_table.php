@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('operator_status', '1')->comment('事業者登録ステータス');
             $table->string('operator_category', '1')->nullable()->comment('補助事業者区分');
             $table->string('oath', '1')->nullable()->comment('宣誓');
+            $table->string('change_category', '1')->nullable()->comment('変更有無区分');
+            $table->boolean('continueFlag')->nullable()->comment('継続フラグ');
             $table->string('corp_number', '13')->nullable()->comment('法人番号');
             $table->string('operator_name', '50')->nullable()->comment('法人名・屋号');
             $table->string('operator_title', '30')->nullable()->comment('代表者 肩書');
