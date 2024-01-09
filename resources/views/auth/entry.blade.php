@@ -22,7 +22,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('/css/styles.css') }}" >
+    <link rel="stylesheet" href="{{ asset('/css/entry_styles.css') }}" >
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DYB5FTRP5M"></script>
     <script>
@@ -41,8 +41,8 @@
         <p class="p-header-logo">
             <a href="/">
                 <picture>
-                    <source media="(max-width:767px)" srcset="{{ asset('/img/logo_jutaku_shoene_01_sp.svg') }}">
-                    <img alt="住宅省エネ 2024キャンペーン" src="{{ asset('/img/logo_jutaku_shoene_01.svg') }}">
+                    <source media="(max-width:767px)" srcset="/assets/img/logo_jutaku_shoene_01_sp.svg">
+                    <img alt="住宅省エネ 2024キャンペーン" src="/assets/img/logo_jutaku_shoene_01.svg">
                 </picture>
             </a>
         </p>
@@ -298,9 +298,9 @@
             <li class="p-footer-nav__item"><a href="/requirement/">サイトご利用に関して</a></li>
         <!-- /.p-footer-nav --></ul>
         <ul class="p-footer-banners">
-            <li class="p-footer-banners__item"><a href="https://www.mlit.go.jp/"><img alt="国土交通省" src="{{ asset('/img/banner_footer_mlit_01.png') }}"></a></li>
-            <li class="p-footer-banners__item"><a href="https://www.meti.go.jp/"><img alt="経済産業省" src="{{ asset('/img/banner_footer_meti_01.png') }}"></a></li>
-            <li class="p-footer-banners__item"><a href="https://www.env.go.jp/"><img alt="環境省" src="{{ asset('/img/banner_footer_env_01.png') }}"></a></li>
+            <li class="p-footer-banners__item"><a href="https://www.mlit.go.jp/"><img alt="国土交通省" src="/assets/img/banner_footer_mlit_01.png"></a></li>
+            <li class="p-footer-banners__item"><a href="https://www.meti.go.jp/"><img alt="経済産業省" src="/assets/img/banner_footer_meti_01.png"></a></li>
+            <li class="p-footer-banners__item"><a href="https://www.env.go.jp/"><img alt="環境省" src="/assets/img/banner_footer_env_01.png"></a></li>
         <!-- /.p-footer-banners --></ul>
         <p class="p-footer-copy">©子育てエコホーム支援事業事務局 All Rights Reserved.</p>
     <!-- /.p-footer --></footer>

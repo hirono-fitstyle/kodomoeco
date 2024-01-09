@@ -29,6 +29,7 @@ Route::middleware('guest')->group(function () {
     Route::get('entry/confirm',[RegisterAccountController::class,'confirm'])->name('entry.confirm');
     Route::post('entry/confirm',[RegisterAccountController::class,'register'])->name('entry.register');
     Route::get('entry/certification',[RegisterAccountController::class,'certification'])->name('entry.certification');
+    Route::get('entry/certification-failed',[RegisterAccountController::class,'certificationFailed'])->name('entry.certification-failed');
     Route::get('entry/completion/{token}',[RegisterAccountController::class,'completion'])->name('entry.completion');
     Route::get('entry/terms-of-service',[RegisterAccountController::class,'showTerms'])->name('entry.terms');
 

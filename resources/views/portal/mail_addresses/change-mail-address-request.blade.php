@@ -22,7 +22,7 @@
     <p class="p-header-logo">
         <a href="/">
             <picture>
-                <img alt="住宅省エネ 2024キャンペーン" src="{{ asset('/img/logo.svg') }}">
+                <img alt="住宅省エネ 2024キャンペーン" src="/assets/img/logo.svg">
             </picture>
         </a>
         <span class="">共通ポータル</span>

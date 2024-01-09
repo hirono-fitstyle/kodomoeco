@@ -63,6 +63,11 @@ class RegisterAccountController extends Controller
         return view('auth.certification');
     }
 
+    public function certificationFailed(Request $request)
+    {
+        return view('auth.certification-failed');
+    }
+
     public function register(Request $request)
     {
         // 戻るボタン処理
@@ -106,7 +111,7 @@ class RegisterAccountController extends Controller
     public function completion(Request $request)
     {
         if (empty($request->route('token'))) {
-            abort(404);
+            return view('auth.certification-failed');
         }
         $token = $request->route('token');
 
@@ -116,8 +121,7 @@ class RegisterAccountController extends Controller
         ->whereNull('email_verified_at');
 
         if (!$obj_account->exists()) {
-            // 404エラー
-            abort(404);
+            return view('auth.certification-failed');
         }
 
         $account = $obj_account->first();
